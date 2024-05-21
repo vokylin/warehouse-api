@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsWorkNoticeAllotMapper">
+    <resultMap type="WmsWorkNoticeAllot" id="WmsWorkNoticeAllotResult">
+        <result property="id" column="id"/>
+        <result property="workNoticeId" column="work_notice_id"/>
+        <result property="workNoticeDetailId" column="work_notice_detail_id"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="sourceLocationId" column="source_location_id"/>
+        <result property="sourceLocationName" column="source_location_name"/>
+        <result property="targetLocationId" column="target_location_id"/>
+        <result property="targetLocationName" column="target_location_name"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="sourceWarehouseName" column="source_warehouse_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsWorkNoticeAllotVo">
+        select allot.id,
+               allot.work_notice_id,
+               allot.work_notice_detail_id,
+               allot.item_code,
+               allot.batch_no,
+               allot.source_location_id,
+               allot.target_location_id,
+               allot.warehouse_id,
+               allot.quantity,
+               allot.status,
+               allot.create_by,
+               allot.create_time,
+               allot.update_by,
+               allot.update_time,
+               notice.notice_id
+        from wms_work_notice_allot as allot
+                 left join wms_work_notice as notice on notice.id = allot.work_notice_id
+    </sql>
+
+
+    <sql id="workNoticeAllotList">
+        select allot.id,
+               allot.work_notice_id,
+               allot.work_notice_detail_id,
+               allot.item_code,
+               allot.batch_no,
+               allot.source_location_id,
+               allot.target_location_id,
+               allot.warehouse_id,
+               allot.quantity,
+               allot.status,
+               allot.create_by,
+               allot.create_time,
+               allot.update_by,
+               allot.update_time,
+               source_storage.name         as source_location_name,
+               source_storage.warehouse_id as source_warehouse_id,
+               source_warehouse.name       as source_warehouse_name,
+               target_storage.name         as target_location_name,
+               target_warehouse.name       as warehouse_name,
+               notice.item_name            as item_name
+        from wms_work_notice_allot as allot
+                 left join storage_unit as source_storage on allot.source_location_id = source_storage.id
+                 left join storage_unit as target_storage on allot.target_location_id = target_storage.id
+                 left join warehouse as target_warehouse on allot.warehouse_id = target_warehouse.id
+                 left join warehouse as source_warehouse on source_storage.warehouse_id = source_warehouse.id
+                 left join wms_work_notice_detail as work_notice on allot.work_notice_detail_id = work_notice.id
+                 left join wms_receive_notice_detail as notice on work_notice.notice_detail_id = notice.id
+    </sql>
+
+
+    <select id="selectWmsWorkNoticeAllotList" parameterType="WmsWorkNoticeAllot" resultMap="WmsWorkNoticeAllotResult">
+        <include refid="workNoticeAllotList"/>
+        <where>
+            <if test="workNoticeId != null  and workNoticeId != ''">
+                allot.work_notice_id = #{workNoticeId}
+            </if>
+            <if test="workNoticeDetailId != null  and workNoticeDetailId != ''">
+                and allot.work_notice_detail_id = #{workNoticeDetailId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and allot.item_code = #{itemCode}
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and allot.batch_no = #{batchNo}
+            </if>
+            <if test="sourceLocationId != null  and sourceLocationId != ''">
+                and allot.source_location_id = #{sourceLocationId}
+            </if>
+            <if test="targetLocationId != null  and targetLocationId != ''">
+                and allot.target_location_id = #{targetLocationId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and allot.warehouse_id = #{warehouseId}
+            </if>
+            <if test="status != null">
+                and allot.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsWorkNoticeAllotById" parameterType="String" resultMap="WmsWorkNoticeAllotResult">
+        <include refid="selectWmsWorkNoticeAllotVo"/>
+        where allot.id = #{id}
+    </select>
+
+    <insert id="insertWmsWorkNoticeAllot" parameterType="WmsWorkNoticeAllot">
+        insert into wms_work_notice_allot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="workNoticeId != null">
+                work_notice_id,
+            </if>
+            <if test="workNoticeDetailId != null">
+                work_notice_detail_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="sourceLocationId != null">
+                source_location_id,
+            </if>
+            <if test="targetLocationId != null">
+                target_location_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="workNoticeId != null">
+                #{workNoticeId},
+            </if>
+            <if test="workNoticeDetailId != null">
+                #{workNoticeDetailId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="sourceLocationId != null">
+                #{sourceLocationId},
+            </if>
+            <if test="targetLocationId != null">
+                #{targetLocationId},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsWorkNoticeAllot" parameterType="WmsWorkNoticeAllot">
+        update wms_work_notice_allot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workNoticeId != null">
+                work_notice_id = #{workNoticeId},
+            </if>
+            <if test="workNoticeDetailId != null">
+                work_notice_detail_id = #{workNoticeDetailId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="sourceLocationId != null">
+                source_location_id = #{sourceLocationId},
+            </if>
+            <if test="targetLocationId != null">
+                target_location_id = #{targetLocationId},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsWorkNoticeAllotById" parameterType="String">
+        delete
+        from wms_work_notice_allot
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsWorkNoticeAllotByIds" parameterType="String">
+        delete
+        from wms_work_notice_allot where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectItemDetail" resultMap="WmsWorkNoticeAllotResult">
+        <include refid="selectWmsWorkNoticeAllotVo"/>
+        <where>
+            <if test="workNoticeId != null  and workNoticeId != ''">
+                allot.work_notice_id = #{workNoticeId}
+            </if>
+            <if test="workNoticeDetailId != null  and workNoticeDetailId != ''">
+                and allot.work_notice_detail_id = #{workNoticeDetailId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and allot.item_code = #{itemCode}
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and allot.batch_no = #{batchNo}
+            </if>
+            <if test="sourceLocationId != null  and sourceLocationId != ''">
+                and allot.source_location_id = #{sourceLocationId}
+            </if>
+            <if test="targetLocationId != null  and targetLocationId != ''">
+                and allot.target_location_id = #{targetLocationId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and allot.warehouse_id = #{warehouseId}
+            </if>
+            <if test="quantity != null">
+                and allot.quantity = #{quantity}
+            </if>
+            <if test="status != null">
+                and allot.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllotListByDetailId" resultMap="WmsWorkNoticeAllotResult">
+        <include refid="selectWmsWorkNoticeAllotVo"/>
+        where allot.work_notice_detail_id = #{id}
+    </select>
+
+    <select id="batchUpdateStatus">
+        update wms_work_notice_allot
+        set status = #{status}
+        where work_notice_id = #{id}
+    </select>
+</mapper>

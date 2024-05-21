@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsDeliveryNoticeMapper">
+    <resultMap type="WmsDeliveryNotice" id="WmsDeliveryNoticeResult">
+        <result property="id" column="id"/>
+        <result property="businessId" column="business_id"/>
+        <result property="businessType" column="business_type"/>
+        <result property="locationId" column="location_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="status" column="status"/>
+        <result property="deliveryStartTime" column="delivery_start_time"/>
+        <result property="deliveryEndTime" column="delivery_end_time"/>
+        <result property="noticeUserId" column="notice_user_id"/>
+        <result property="noticeUser" column="notice_user"/>
+        <result property="toCode" column="to_code"/>
+        <result property="toName" column="to_name"/>
+        <result property="toContacts" column="to_contacts"/>
+        <result property="toContactsTel" column="to_contacts_tel"/>
+        <result property="toAddress" column="to_address"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="thermosphere" column="thermosphere"/>
+        <result property="noticeDesc" column="notice_desc"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+    </resultMap>
+
+    <resultMap type="DeliveryNoticeInfo" id="DeliveryNoticeInfoResult">
+        <result property="id" column="id"/>
+        <result property="businessId" column="business_id"/>
+        <result property="businessType" column="business_type"/>
+        <result property="noticeUserId" column="notice_user_id"/>
+        <result property="noticeUser" column="notice_user"/>
+        <result property="toCode" column="to_code"/>
+        <result property="toName" column="to_name"/>
+        <result property="toContacts" column="to_contacts"/>
+        <result property="toContactsTel" column="to_contacts_tel"/>
+        <result property="toAddress" column="to_address"/>
+        <result property="thermosphere" column="thermosphere"/>
+        <result property="totalQuantity" column="total_quantity"/>
+        <result property="pickQuantity" column="pick_quantity"/>
+        <result property="deliveryQuantity" column="delivery_quantity"/>
+    </resultMap>
+
+    <sql id="selectWmsDeliveryNoticeVo">
+        select id,
+               business_id,
+               business_type,
+               location_id,
+               company_id,
+               status,
+               delivery_start_time,
+               delivery_end_time,
+               notice_user_id,
+               notice_user,
+               to_code,
+               to_name,
+               to_contacts,
+               to_contacts_tel,
+               to_address,
+               dept_name,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               thermosphere,
+               receive_send_type,
+               notice_desc
+        from wms_delivery_notice
+    </sql>
+
+    <select id="selectWmsDeliveryNoticeList" parameterType="WmsDeliveryNotice" resultMap="WmsDeliveryNoticeResult">
+        <include refid="selectWmsDeliveryNoticeVo"/>
+        <where>
+            <if test="id != null  and id != ''">
+                and id = #{id}
+            </if>
+            <if test="businessId != null  and businessId != ''">
+                and business_id = #{businessId}
+            </if>
+            <if test="businessType != null  and businessType != ''">
+                and business_type = #{businessType}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and location_id = #{locationId}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="deliveryStartTime != null">
+                and delivery_start_time = #{deliveryStartTime}
+            </if>
+            <if test="deliveryEndTime != null">
+                and delivery_end_time = #{deliveryEndTime}
+            </if>
+            <if test="noticeUserId != null  and noticeUserId != ''">
+                and notice_user_id = #{noticeUserId}
+            </if>
+            <if test="noticeUser != null  and noticeUser != ''">
+                and notice_user = #{noticeUser}
+            </if>
+            <if test="toCode != null  and toCode != ''">
+                and to_code = #{toCode}
+            </if>
+            <if test="toName != null  and toName != ''">
+                and to_name like concat('%', #{toName}, '%')
+            </if>
+            <if test="toContacts != null  and toContacts != ''">
+                and to_contacts = #{toContacts}
+            </if>
+            <if test="toContactsTel != null  and toContactsTel != ''">
+                and to_contacts_tel = #{toContactsTel}
+            </if>
+            <if test="toAddress != null  and toAddress != ''">
+                and to_address = #{toAddress}
+            </if>
+            <if test="thermosphere != null">
+                and thermosphere = #{thermosphere}
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                and receive_send_type = #{receiveSendType}
+            </if>
+            <if test="statusArr != null and statusArr.length != 0">
+                and status in
+                <foreach collection="statusArr" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectWmsDeliveryNoticeById" parameterType="String" resultMap="WmsDeliveryNoticeResult">
+        <include refid="selectWmsDeliveryNoticeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDeliveryNotice" parameterType="WmsDeliveryNotice">
+        insert into wms_delivery_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="deliveryStartTime != null">
+                delivery_start_time,
+            </if>
+            <if test="deliveryEndTime != null">
+                delivery_end_time,
+            </if>
+            <if test="noticeUserId != null">
+                notice_user_id,
+            </if>
+            <if test="noticeUser != null">
+                notice_user,
+            </if>
+            <if test="toCode != null">
+                to_code,
+            </if>
+            <if test="toName != null">
+                to_name,
+            </if>
+            <if test="toContacts != null">
+                to_contacts,
+            </if>
+            <if test="toContactsTel != null">
+                to_contacts_tel,
+            </if>
+            <if test="toAddress != null">
+                to_address,
+            </if>
+            <if test="deptName != null">
+                dept_name,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="thermosphere != null">
+                thermosphere,
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type,
+            </if>
+            <if test="noticeDesc != null  and noticeDesc != ''">
+                notice_desc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="businessId != null">
+                #{businessId},
+            </if>
+            <if test="businessType != null">
+                #{businessType},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="deliveryStartTime != null">
+                #{deliveryStartTime},
+            </if>
+            <if test="deliveryEndTime != null">
+                #{deliveryEndTime},
+            </if>
+            <if test="noticeUserId != null">
+                #{noticeUserId},
+            </if>
+            <if test="noticeUser != null">
+                #{noticeUser},
+            </if>
+            <if test="toCode != null">
+                #{toCode},
+            </if>
+            <if test="toName != null">
+                #{toName},
+            </if>
+            <if test="toContacts != null">
+                #{toContacts},
+            </if>
+            <if test="toContactsTel != null">
+                #{toContactsTel},
+            </if>
+            <if test="toAddress != null">
+                #{toAddress},
+            </if>
+            <if test="deptName != null">
+                #{deptName},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="thermosphere != null">
+                #{thermosphere},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                #{receiveSendType},
+            </if>
+            <if test="noticeDesc != null  and noticeDesc != ''">
+                #{noticeDesc},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDeliveryNotice" parameterType="WmsDeliveryNotice">
+        update wms_delivery_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="businessId != null">
+                business_id = #{businessId},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="deliveryStartTime != null">
+                delivery_start_time = #{deliveryStartTime},
+            </if>
+            <if test="deliveryEndTime != null">
+                delivery_end_time = #{deliveryEndTime},
+            </if>
+            <if test="noticeUserId != null">
+                notice_user_id = #{noticeUserId},
+            </if>
+            <if test="noticeUser != null">
+                notice_user = #{noticeUser},
+            </if>
+            <if test="toCode != null">
+                to_code = #{toCode},
+            </if>
+            <if test="toName != null">
+                to_name = #{toName},
+            </if>
+            <if test="toContacts != null">
+                to_contacts = #{toContacts},
+            </if>
+            <if test="toContactsTel != null">
+                to_contacts_tel = #{toContactsTel},
+            </if>
+            <if test="toAddress != null">
+                to_address = #{toAddress},
+            </if>
+            <if test="deptName != null">
+                dept_name = #{deptName},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="thermosphere != null">
+                thermosphere = #{thermosphere},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type = #{receiveSendType},
+            </if>
+            <if test="noticeDesc != null  and noticeDesc != ''">
+                notice_desc = #{noticeDesc},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDeliveryNoticeById" parameterType="String">
+        delete
+        from wms_delivery_notice
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDeliveryNoticeByIds" parameterType="String">
+        delete
+        from wms_delivery_notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="inactive" parameterType="WmsDeliveryNotice">
+        update wms_delivery_notice
+        set status              = 0,
+            delivery_start_time = null,
+            thermosphere        = null,
+            update_by           = #{updateBy},
+            update_time         = #{updateTime}
+        where id = #{id}
+    </update>
+
+    <select id="deliveryConfirmInfo" resultMap="DeliveryNoticeInfoResult">
+        select *
+        from wms_delivery_notice
+                 left join (select delivery_notice_id        as delivery_notice_id
+                                 , sum(quantity)             as total_quantity
+                                 , sum(work_finish_quantity) as pick_quantity
+                                 , sum(delivery_quantity)    as delivery_quantity
+                            from wms_delivery_notice_detail
+                            group by delivery_notice_id) as detail on detail.delivery_notice_id = wms_delivery_notice.id
+        where wms_delivery_notice.id = #{id}
+    </select>
+
+    <select id="selectWmsDeliveryNoticeCountByToday" resultType="int">
+        select count(1)
+        from wms_delivery_notice
+        where to_days(create_time) = to_days(now())
+    </select>
+
+    <select id="selectUnfinishedDeliveryNotice" resultType="int">
+        select count(1)
+        from wms_delivery_notice
+        where create_time &gt;= #{startTime} and create_time &lt;= #{endTime}
+        and status != ${@com.ruoyi.common.enums.DeliveryNoticeStatus@COMPLETE.getCode()}
+        and status != ${@com.ruoyi.common.enums.DeliveryNoticeStatus@REFUSE.getCode()}
+        and status != ${@com.ruoyi.common.enums.DeliveryNoticeStatus@CANCEL.getCode()}
+    </select>
+</mapper>

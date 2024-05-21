@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ProductInfoMapper">
+    <resultMap type="ProductInfo" id="ProductInfoResult">
+        <result property="id" column="id"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="createEnterpriseKey" column="create_enterprise_key"/>
+        <result property="materialCodeEnterprise" column="material_code_enterprise"/>
+        <result property="category" column="category"/>
+        <result property="barcode" column="barcode"/>
+        <result property="partNo" column="part_no"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="onLine" column="on_line"/>
+        <result property="remark" column="remark"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="supplierCode" column="supplier_code"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="categoryProperties" column="category_properties"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="enterpriseKey" column="enterprise_key"/>
+        <result property="locked" column="locked"/>
+        <result property="dosageForm" column="dosage_form"/>
+        <result property="type" column="type"/>
+        <result property="approvalNo" column="approval_no"/>
+        <result property="specPackage" column="spec_package"/>
+        <result property="managerScope" column="manager_scope"/>
+        <result property="classifyTwo" column="classify_two"/>
+        <result property="classifyClinical" column="classify_clinical"/>
+        <result property="classifyIndustry" column="classify_industry"/>
+        <result property="auditStatus" column="audit_status"/>
+        <result property="materialType" column="material_type"/>
+        <result property="applyType" column="apply_type"/>
+        <result property="dosageFormSpec" column="dosage_form_spec"/>
+        <result property="productNumber" column="product_number"/>
+        <result property="effectiveEndDate" column="effective_end_date"/>
+        <result property="materialCodeSupplier" column="material_code_supplier"/>
+        <result property="prepareDay" column="prepare_day"/>
+        <result property="measurementMethods" column="measurement_methods"/>
+        <result property="minUnit" column="min_unit"/>
+        <result property="bigClass" column="big_class"/>
+        <result property="levelClass" column="level_class"/>
+        <result property="stockDefined" column="stock_defined"/>
+        <result property="doseBelongs" column="dose_belongs"/>
+        <result property="masterUnit" column="master_unit"/>
+        <result property="upQuality" column="up_quality"/>
+        <result property="downQuality" column="down_quality"/>
+        <result property="remindDay" column="remind_day"/>
+    </resultMap>
+
+    <sql id="selectProductInfoVo">
+        select product.id,
+               product.product_code,
+               product.product_name,
+               product.create_enterprise_key,
+               product.material_code_enterprise,
+               product.category,
+               product.barcode,
+               product.part_no,
+               product.unit,
+               product.spec,
+               product.unit_price,
+               product.on_line,
+               product.remark,
+               product.create_time,
+               product.supplier_id,
+               product.supplier_code,
+               product.supplier_name,
+               product.is_deleted,
+               product.category_properties,
+               product.create_user_id,
+               product.enterprise_key,
+               product.locked,
+               product.dosage_form,
+               product.type,
+               product.approval_no,
+               product.audit_status,
+               product.material_type,
+               product.dosage_form_spec,
+               product.product_number,
+               product.effective_end_date,
+               product.material_code_supplier,
+               product.measurement_methods,
+               product.min_unit,
+               product.big_class,
+               product.dose_belongs,
+               product.master_unit,
+               attribute.up_quality,
+               attribute.down_quality,
+               attribute.remind_day
+        from tb_product_info product
+                 left join wms_item_attribute attribute on product.product_code = attribute.item_code
+    </sql>
+
+    <select id="selectProductInfoList" parameterType="ProductInfo" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        <where>
+            <if test="productCode != null  and productCode != ''">
+                and INSTR(product.product_code, #{productCode})
+            </if>
+            <if test="productName != null  and productName != ''">
+                and INSTR(product.product_name, #{productName})
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (INSTR(product.product_code, #{itemCodeOrName}) or INSTR(product.product_name, #{itemCodeOrName}))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProductInfoById" parameterType="Long" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        where product.id = #{id}
+    </select>
+
+
+    <select id="findByItemCode" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        where product.product_code = #{itemCode}
+    </select>
+</mapper>

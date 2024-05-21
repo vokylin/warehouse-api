@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsInventoryPlanMapper">
+    <resultMap type="WmsInventoryPlan" id="WmsInventoryPlanResult">
+        <result property="id" column="id"/>
+        <result property="planName" column="plan_name"/>
+        <result property="companyId" column="company_id"/>
+        <result property="warehouseIds" column="warehouse_ids"/>
+        <result property="inventoryMethod" column="inventory_method"/>
+        <result property="storageStatus" column="storage_status"/>
+        <result property="planTime" column="plan_time"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="reviewerId" column="reviewer_id"/>
+        <result property="reviewedBy" column="reviewed_by"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsInventoryPlanVo">
+        select plan.id,
+               plan.plan_name,
+               plan.company_id,
+               plan.warehouse_ids,
+               plan.inventory_method,
+               plan.storage_status,
+               plan.plan_time,
+               plan.remark,
+               plan.status,
+               plan.start_time,
+               plan.end_time,
+               plan.reviewer_id,
+               plan.reviewed_by,
+               plan.create_by,
+               plan.create_time,
+               plan.update_by,
+               plan.update_time,
+               u.nick_name as create_by_name
+        from wms_inventory_plan as plan
+                 left join sys_user u on plan.create_by = u.user_id
+    </sql>
+
+    <select id="selectWmsInventoryPlanList" parameterType="WmsInventoryPlan" resultMap="WmsInventoryPlanResult">
+        <include refid="selectWmsInventoryPlanVo"/>
+        <where>
+            <if test="id != null  and id != ''">
+                and plan.id = #{id}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and plan.company_id = #{companyId}
+            </if>
+            <if test="warehouseIds != null  and warehouseIds != ''">
+                and plan.warehouse_ids = #{warehouseIds}
+            </if>
+            <if test="inventoryMethod != null">
+                and plan.inventory_method = #{inventoryMethod}
+            </if>
+            <if test="storageStatus != null  and storageStatus != ''">
+                and plan.storage_status = #{storageStatus}
+            </if>
+            <if test="planTime != null">
+                and plan.plan_time = #{planTime}
+            </if>
+            <if test="planName != null and planName != ''">
+                and plan.plan_name like concat('%', #{planName}, '%')
+            </if>
+            <if test="status != null">
+                and plan.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and plan.start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                and plan.end_time = #{endTime}
+            </if>
+            <if test="reviewerId != null  and reviewerId != ''">
+                and plan.reviewer_id = #{reviewerId}
+            </if>
+            <if test="reviewedBy != null  and reviewedBy != ''">
+                and plan.reviewed_by = #{reviewedBy}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsInventoryPlanById" parameterType="String" resultMap="WmsInventoryPlanResult">
+        <include refid="selectWmsInventoryPlanVo"/>
+        where plan.id = #{id}
+    </select>
+
+    <insert id="insertWmsInventoryPlan" parameterType="WmsInventoryPlan">
+        insert into wms_inventory_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="planName != null and planName != ''">
+                plan_name,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="warehouseIds != null">
+                warehouse_ids,
+            </if>
+            <if test="inventoryMethod != null">
+                inventory_method,
+            </if>
+            <if test="storageStatus != null">
+                storage_status,
+            </if>
+            <if test="planTime != null">
+                plan_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="reviewerId != null">
+                reviewer_id,
+            </if>
+            <if test="reviewedBy != null">
+                reviewed_by,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="planName != null and planName != ''">
+                #{planName},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="warehouseIds != null">
+                #{warehouseIds},
+            </if>
+            <if test="inventoryMethod != null">
+                #{inventoryMethod},
+            </if>
+            <if test="storageStatus != null">
+                #{storageStatus},
+            </if>
+            <if test="planTime != null">
+                #{planTime},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="reviewerId != null">
+                #{reviewerId},
+            </if>
+            <if test="reviewedBy != null">
+                #{reviewedBy},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsInventoryPlan" parameterType="WmsInventoryPlan">
+        update wms_inventory_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planName != null and planName != ''">
+                plan_name = #{planName},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="warehouseIds != null">
+                warehouse_ids = #{warehouseIds},
+            </if>
+            <if test="inventoryMethod != null">
+                inventory_method = #{inventoryMethod},
+            </if>
+            <if test="storageStatus != null">
+                storage_status = #{storageStatus},
+            </if>
+            <if test="planTime != null">
+                plan_time = #{planTime},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="reviewerId != null">
+                reviewer_id = #{reviewerId},
+            </if>
+            <if test="reviewedBy != null">
+                reviewed_by = #{reviewedBy},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsInventoryPlanById" parameterType="String">
+        delete
+        from wms_inventory_plan
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsInventoryPlanByIds" parameterType="String">
+        delete
+        from wms_inventory_plan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCountByToday" resultType="int">
+        select count(*)
+        from wms_inventory_plan
+        where to_days(create_time) = to_days(now())
+    </select>
+</mapper>

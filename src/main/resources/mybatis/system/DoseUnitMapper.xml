@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.DoseUnitMapper">
+    <resultMap type="DoseUnit" id="TbDoseUnitResult">
+        <result property="id" column="id"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="masterUnit" column="master_unit"/>
+        <result property="conversionRate" column="conversion_rate"/>
+        <result property="belongs" column="belongs"/>
+        <result property="doseUnit" column="dose_unit"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUserId" column="update_user_id"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="enterpriseKey" column="enterprise_key"/>
+    </resultMap>
+
+    <sql id="selectTbDoseUnitVo">
+        select id,
+               product_code,
+               product_name,
+               master_unit,
+               conversion_rate,
+               belongs,
+               dose_unit,
+               create_time,
+               create_user_id,
+               create_user_name,
+               update_time,
+               update_user_id,
+               update_user_name,
+               enterprise_key
+        from tb_dose_unit
+    </sql>
+
+    <select id="selectTbDoseUnitList" parameterType="DoseUnit" resultMap="TbDoseUnitResult">
+        <include refid="selectTbDoseUnitVo"/>
+        <where>
+            <if test="productCode != null  and productCode != ''">
+                and product_code = #{productCode}
+            </if>
+            <if test="productName != null  and productName != ''">
+                and product_name like concat('%', #{productName}, '%')
+            </if>
+            <if test="masterUnit != null  and masterUnit != ''">
+                and master_unit = #{masterUnit}
+            </if>
+            <if test="conversionRate != null">
+                and conversion_rate = #{conversionRate}
+            </if>
+            <if test="belongs != null  and belongs != ''">
+                and belongs = #{belongs}
+            </if>
+            <if test="doseUnit != null  and doseUnit != ''">
+                and dose_unit = #{doseUnit}
+            </if>
+            <if test="createUserId != null  and createUserId != ''">
+                and create_user_id = #{createUserId}
+            </if>
+            <if test="createUserName != null  and createUserName != ''">
+                and create_user_name like concat('%', #{createUserName}, '%')
+            </if>
+            <if test="updateUserId != null  and updateUserId != ''">
+                and update_user_id = #{updateUserId}
+            </if>
+            <if test="updateUserName != null  and updateUserName != ''">
+                and update_user_name like concat('%', #{updateUserName}, '%')
+            </if>
+            <if test="enterpriseKey != null  and enterpriseKey != ''">
+                and enterprise_key = #{enterpriseKey}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectTbDoseUnitById" parameterType="String" resultMap="TbDoseUnitResult">
+        <include refid="selectTbDoseUnitVo"/>
+        where id = #{id}
+    </select>
+</mapper>

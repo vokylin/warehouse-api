@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.LogisticsMapper">
+    <resultMap type="Logistics" id="LogisticsResult">
+        <result property="id" column="id"/>
+        <result property="logisticsCode" column="logistics_code"/>
+        <result property="logisticsName" column="logistics_name"/>
+        <result property="contacts" column="contacts"/>
+        <result property="contactsTel" column="contacts_tel"/>
+        <result property="contactsEmail" column="contacts_email"/>
+        <result property="country" column="country"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="region" column="region"/>
+        <result property="address" column="address"/>
+        <result property="zipCode" column="zip_code"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="createId" column="create_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="enterpriseCode" column="enterprise_code"/>
+        <result property="provinceCode" column="province_code"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="shortName" column="short_name"/>
+        <result property="enterpriseKey" column="enterprise_key"/>
+        <result property="auditStatus" column="audit_status"/>
+        <result property="managerScope" column="manager_scope"/>
+        <result property="type" column="type"/>
+        <result property="applyType" column="apply_type"/>
+        <result property="locked" column="locked"/>
+    </resultMap>
+
+    <sql id="selectLogisticsVo">
+        select id,
+               logistics_code,
+               logistics_name,
+               contacts,
+               contacts_tel,
+               contacts_email,
+               country,
+               province,
+               city,
+               region,
+               address,
+               zip_code,
+               description,
+               status,
+               create_id,
+               create_by,
+               create_date,
+               update_by,
+               update_date,
+               is_deleted,
+               enterprise_code,
+               province_code,
+               city_code,
+               region_code,
+               short_name,
+               enterprise_key,
+               audit_status,
+               manager_scope,
+               type,
+               apply_type,
+               locked
+        from tb_logistics
+    </sql>
+
+    <select id="selectLogisticsList" parameterType="Logistics" resultMap="LogisticsResult">
+        <include refid="selectLogisticsVo"/>
+        <where>
+            is_deleted = 0
+            and audit_status = 2
+            and status = 0
+            <if test="logisticsCode != null  and logisticsCode != ''">
+                and logistics_code = #{logisticsCode}
+            </if>
+            <if test="logisticsName != null  and logisticsName != ''">
+                and logistics_name like concat('%', #{logisticsName}, '%')
+            </if>
+            <if test="contacts != null  and contacts != ''">
+                and contacts = #{contacts}
+            </if>
+            <if test="contactsTel != null  and contactsTel != ''">
+                and contacts_tel = #{contactsTel}
+            </if>
+            <if test="contactsEmail != null  and contactsEmail != ''">
+                and contacts_email = #{contactsEmail}
+            </if>
+            <if test="country != null  and country != ''">
+                and country = #{country}
+            </if>
+            <if test="province != null  and province != ''">
+                and province = #{province}
+            </if>
+            <if test="city != null  and city != ''">
+                and city = #{city}
+            </if>
+            <if test="region != null  and region != ''">
+                and region = #{region}
+            </if>
+            <if test="address != null  and address != ''">
+                and address = #{address}
+            </if>
+            <if test="zipCode != null  and zipCode != ''">
+                and zip_code = #{zipCode}
+            </if>
+            <if test="description != null  and description != ''">
+                and description = #{description}
+            </if>
+            <if test="status != null  and status != ''">
+                and status = #{status}
+            </if>
+            <if test="createId != null  and createId != ''">
+                and create_id = #{createId}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate}
+            </if>
+            <if test="isDeleted != null  and isDeleted != ''">
+                and is_deleted = #{isDeleted}
+            </if>
+            <if test="enterpriseCode != null  and enterpriseCode != ''">
+                and enterprise_code = #{enterpriseCode}
+            </if>
+            <if test="provinceCode != null  and provinceCode != ''">
+                and province_code = #{provinceCode}
+            </if>
+            <if test="cityCode != null  and cityCode != ''">
+                and city_code = #{cityCode}
+            </if>
+            <if test="regionCode != null  and regionCode != ''">
+                and region_code = #{regionCode}
+            </if>
+            <if test="shortName != null  and shortName != ''">
+                and short_name like concat('%', #{shortName}, '%')
+            </if>
+            <if test="enterpriseKey != null  and enterpriseKey != ''">
+                and enterprise_key = #{enterpriseKey}
+            </if>
+            <if test="auditStatus != null  and auditStatus != ''">
+                and audit_status = #{auditStatus}
+            </if>
+            <if test="managerScope != null  and managerScope != ''">
+                and manager_scope = #{managerScope}
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="applyType != null  and applyType != ''">
+                and apply_type = #{applyType}
+            </if>
+            <if test="locked != null  and locked != ''">
+                and locked = #{locked}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectLogisticsById" parameterType="String" resultMap="LogisticsResult">
+        <include refid="selectLogisticsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLogistics" parameterType="Logistics">
+        insert into tb_logistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="logisticsCode != null">
+                logistics_code,
+            </if>
+            <if test="logisticsName != null">
+                logistics_name,
+            </if>
+            <if test="contacts != null">
+                contacts,
+            </if>
+            <if test="contactsTel != null">
+                contacts_tel,
+            </if>
+            <if test="contactsEmail != null">
+                contacts_email,
+            </if>
+            <if test="country != null">
+                country,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="zipCode != null">
+                zip_code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted,
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code,
+            </if>
+            <if test="provinceCode != null">
+                province_code,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="regionCode != null">
+                region_code,
+            </if>
+            <if test="shortName != null">
+                short_name,
+            </if>
+            <if test="enterpriseKey != null and enterpriseKey != ''">
+                enterprise_key,
+            </if>
+            <if test="auditStatus != null">
+                audit_status,
+            </if>
+            <if test="managerScope != null">
+                manager_scope,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="applyType != null and applyType != ''">
+                apply_type,
+            </if>
+            <if test="locked != null">
+                locked,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="logisticsCode != null">
+                #{logisticsCode},
+            </if>
+            <if test="logisticsName != null">
+                #{logisticsName},
+            </if>
+            <if test="contacts != null">
+                #{contacts},
+            </if>
+            <if test="contactsTel != null">
+                #{contactsTel},
+            </if>
+            <if test="contactsEmail != null">
+                #{contactsEmail},
+            </if>
+            <if test="country != null">
+                #{country},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="region != null">
+                #{region},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="zipCode != null">
+                #{zipCode},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createId != null">
+                #{createId},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                #{isDeleted},
+            </if>
+            <if test="enterpriseCode != null">
+                #{enterpriseCode},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode},
+            </if>
+            <if test="regionCode != null">
+                #{regionCode},
+            </if>
+            <if test="shortName != null">
+                #{shortName},
+            </if>
+            <if test="enterpriseKey != null and enterpriseKey != ''">
+                #{enterpriseKey},
+            </if>
+            <if test="auditStatus != null">
+                #{auditStatus},
+            </if>
+            <if test="managerScope != null">
+                #{managerScope},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="applyType != null and applyType != ''">
+                #{applyType},
+            </if>
+            <if test="locked != null">
+                #{locked},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateLogistics" parameterType="Logistics">
+        update tb_logistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logisticsCode != null">
+                logistics_code = #{logisticsCode},
+            </if>
+            <if test="logisticsName != null">
+                logistics_name = #{logisticsName},
+            </if>
+            <if test="contacts != null">
+                contacts = #{contacts},
+            </if>
+            <if test="contactsTel != null">
+                contacts_tel = #{contactsTel},
+            </if>
+            <if test="contactsEmail != null">
+                contacts_email = #{contactsEmail},
+            </if>
+            <if test="country != null">
+                country = #{country},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="region != null">
+                region = #{region},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="zipCode != null">
+                zip_code = #{zipCode},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted = #{isDeleted},
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code = #{enterpriseCode},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode},
+            </if>
+            <if test="regionCode != null">
+                region_code = #{regionCode},
+            </if>
+            <if test="shortName != null">
+                short_name = #{shortName},
+            </if>
+            <if test="enterpriseKey != null and enterpriseKey != ''">
+                enterprise_key = #{enterpriseKey},
+            </if>
+            <if test="auditStatus != null">
+                audit_status = #{auditStatus},
+            </if>
+            <if test="managerScope != null">
+                manager_scope = #{managerScope},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="applyType != null and applyType != ''">
+                apply_type = #{applyType},
+            </if>
+            <if test="locked != null">
+                locked = #{locked},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLogisticsById" parameterType="String">
+        delete
+        from tb_logistics
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteLogisticsByIds" parameterType="String">
+        delete
+        from tb_logistics where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

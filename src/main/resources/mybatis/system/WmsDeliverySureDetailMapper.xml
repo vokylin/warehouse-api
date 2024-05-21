@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WmsDeliverySureDetailMapper">
+    <resultMap type="WmsDeliverySureDetail" id="WmsDeliverySureDetailResult">
+        <result property="id" column="id"/>
+        <result property="sureId" column="sure_id"/>
+        <result property="checkId" column="check_id"/>
+        <result property="checkItem" column="check_item"/>
+        <result property="checkRequirement" column="check_requirement"/>
+        <result property="result" column="result"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <sql id="selectWmsDeliverySureDetailVo">
+        select id, sure_id, check_id, check_item, check_requirement, result, sort
+        from wms_delivery_sure_detail
+    </sql>
+
+    <select id="selectWmsDeliverySureDetailList" parameterType="WmsDeliverySureDetail"
+            resultMap="WmsDeliverySureDetailResult">
+        <include refid="selectWmsDeliverySureDetailVo"/>
+        <where>
+            <if test="sureId != null  and sureId != ''">
+                and sure_id = #{sureId}
+            </if>
+            <if test="checkId != null  and checkId != ''">
+                and check_id = #{checkId}
+            </if>
+            <if test="checkItem != null  and checkItem != ''">
+                and check_item = #{checkItem}
+            </if>
+            <if test="checkRequirement != null  and checkRequirement != ''">
+                and check_requirement = #{checkRequirement}
+            </if>
+            <if test="result != null">
+                and result = #{result}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsDeliverySureDetailById" parameterType="String" resultMap="WmsDeliverySureDetailResult">
+        <include refid="selectWmsDeliverySureDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDeliverySureDetail" parameterType="WmsDeliverySureDetail">
+        insert into wms_delivery_sure_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sureId != null">
+                sure_id,
+            </if>
+            <if test="checkId != null">
+                check_id,
+            </if>
+            <if test="checkItem != null">
+                check_item,
+            </if>
+            <if test="checkRequirement != null">
+                check_requirement,
+            </if>
+            <if test="result != null">
+                result,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="sureId != null">
+                #{sureId},
+            </if>
+            <if test="checkId != null">
+                #{checkId},
+            </if>
+            <if test="checkItem != null">
+                #{checkItem},
+            </if>
+            <if test="checkRequirement != null">
+                #{checkRequirement},
+            </if>
+            <if test="result != null">
+                #{result},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDeliverySureDetail" parameterType="WmsDeliverySureDetail">
+        update wms_delivery_sure_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sureId != null">
+                sure_id = #{sureId},
+            </if>
+            <if test="checkId != null">
+                check_id = #{checkId},
+            </if>
+            <if test="checkItem != null">
+                check_item = #{checkItem},
+            </if>
+            <if test="checkRequirement != null">
+                check_requirement = #{checkRequirement},
+            </if>
+            <if test="result != null">
+                result = #{result},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDeliverySureDetailById" parameterType="String">
+        delete
+        from wms_delivery_sure_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDeliverySureDetailByIds" parameterType="String">
+        delete
+        from wms_delivery_sure_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectBySureId" resultMap="WmsDeliverySureDetailResult">
+        select id, sure_id, check_id, check_item, check_requirement, result, sort
+        from wms_delivery_sure_detail
+        where sure_id = #{id}
+        order by sort
+    </select>
+</mapper>

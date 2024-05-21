@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsReceiveNoticeDetailMapper">
+    <resultMap type="WmsReceiveNoticeDetail" id="WmsReceiveNoticeDetailResult">
+        <result property="id" column="id"/>
+        <result property="receiveNoticeId" column="receive_notice_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="receiveQuantity" column="receive_quantity"/>
+        <result property="allotQuantity" column="allot_quantity"/>
+        <result property="productDate" column="product_date"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="businessQuantity" column="business_quantity"/>
+        <result property="businesUnit" column="busines_unit"/>
+        <result property="belongs" column="belongs"/>
+        <result property="conversionRate" column="conversion_rate"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="locationId" column="location_id"/>
+        <result property="locationName" column="location_name"/>
+        <result property="itemType" column="item_type"/>
+        <result property="status" column="status"/>
+        <result property="checkAcceptId" column="check_accept_id"/>
+        <result property="itemPrice" column="item_price"/>
+        <result property="expireTime" column="expire_time"/>
+        <result property="warehouseId" column="warehouse_id"/>
+    </resultMap>
+
+    <sql id="selectWmsReceiveNoticeDetailVo">
+        select detail.id,
+               detail.receive_notice_id,
+               detail.quantity,
+               detail.receive_quantity,
+               detail.quantity - detail.receive_quantity as allot_quantity,
+               detail.product_date,
+               detail.item_code,
+               detail.item_name,
+               detail.unit,
+               detail.spec,
+               detail.batch_no,
+               detail.business_quantity,
+               detail.busines_unit,
+               detail.belongs,
+               detail.conversion_rate,
+               detail.create_by,
+               detail.create_time,
+               detail.update_by,
+               detail.update_time,
+               detail.location_id,
+               detail.item_type,
+               detail.status,
+               detail.check_accept_id,
+               detail.item_price,
+               detail.expire_time,
+               unit.name         as location_name,
+               unit.warehouse_id as warehouse_id
+        from wms_receive_notice_detail as detail
+                 left join storage_unit as unit on detail.location_id = unit.id
+    </sql>
+
+    <select id="selectWmsReceiveNoticeDetailList" parameterType="WmsReceiveNoticeDetail"
+            resultMap="WmsReceiveNoticeDetailResult">
+        <include refid="selectWmsReceiveNoticeDetailVo"/>
+        <where>
+            <if test="receiveNoticeId != null  and receiveNoticeId != ''">
+                and detail.receive_notice_id = #{receiveNoticeId}
+            </if>
+            <if test="quantity != null">
+                and detail.quantity = #{quantity}
+            </if>
+            <if test="receiveQuantity != null">
+                and detail.receive_quantity = #{receiveQuantity}
+            </if>
+            <if test="allotQuantity != null">
+                and detail.allot_quantity = #{allotQuantity}
+            </if>
+            <if test="productDate != null">
+                and detail.product_date = #{productDate}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and detail.item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and detail.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and detail.batch_no = #{batchNo}
+            </if>
+            <if test="businessQuantity != null">
+                and detail.business_quantity = #{businessQuantity}
+            </if>
+            <if test="businesUnit != null  and businesUnit != ''">
+                and detail.busines_unit = #{businesUnit}
+            </if>
+            <if test="belongs != null  and belongs != ''">
+                and detail.belongs = #{belongs}
+            </if>
+
+            <if test="locationId != null  and locationId != ''">
+                and detail.location_id = #{locationId}
+            </if>
+            <if test="itemType != null">
+                and detail.item_type = #{itemType}
+            </if>
+            <if test="status != null">
+                and detail.status = #{status}
+            </if>
+            <if test="itemCodeOrName != null  and itemCodeOrName != ''">
+                and (detail.item_code like concat('%', #{itemCodeOrName}, '%') or
+                     detail.item_name like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsReceiveNoticeDetailById" parameterType="String" resultMap="WmsReceiveNoticeDetailResult">
+        <include refid="selectWmsReceiveNoticeDetailVo"/>
+        where detail.id = #{id}
+    </select>
+
+    <insert id="insertWmsReceiveNoticeDetail" parameterType="WmsReceiveNoticeDetail">
+        insert into wms_receive_notice_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="receiveNoticeId != null">
+                receive_notice_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="receiveQuantity != null">
+                receive_quantity,
+            </if>
+            <if test="allotQuantity != null">
+                allot_quantity,
+            </if>
+            <if test="productDate != null">
+                product_date,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="spec != null">
+                spec,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="businessQuantity != null">
+                business_quantity,
+            </if>
+            <if test="businesUnit != null">
+                busines_unit,
+            </if>
+            <if test="belongs != null">
+                belongs,
+            </if>
+            <if test="conversionRate != null">
+                conversion_rate,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="itemType != null">
+                item_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="checkAcceptId != null">
+                check_accept_id,
+            </if>
+            <if test="itemPrice != null">
+                item_price,
+            </if>
+            <if test="expireTime != null">
+                expire_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="receiveNoticeId != null">
+                #{receiveNoticeId},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="receiveQuantity != null">
+                #{receiveQuantity},
+            </if>
+            <if test="allotQuantity != null">
+                #{allotQuantity},
+            </if>
+            <if test="productDate != null">
+                #{productDate},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="spec != null">
+                #{spec},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="businessQuantity != null">
+                #{businessQuantity},
+            </if>
+            <if test="businesUnit != null">
+                #{businesUnit},
+            </if>
+            <if test="belongs != null">
+                #{belongs},
+            </if>
+            <if test="conversionRate != null">
+                #{conversionRate},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="itemType != null">
+                #{itemType},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="checkAcceptId != null">
+                #{checkAcceptId},
+            </if>
+            <if test="itemPrice != null">
+                #{itemPrice},
+            </if>
+            <if test="expireTime != null">
+                #{expireTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsReceiveNoticeDetail" parameterType="WmsReceiveNoticeDetail">
+        update wms_receive_notice_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="receiveNoticeId != null">
+                receive_notice_id = #{receiveNoticeId},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="receiveQuantity != null">
+                receive_quantity = #{receiveQuantity},
+            </if>
+            <if test="allotQuantity != null">
+                allot_quantity = #{allotQuantity},
+            </if>
+            <if test="productDate != null">
+                product_date = #{productDate},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="spec != null">
+                spec = #{spec},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="businessQuantity != null">
+                business_quantity = #{businessQuantity},
+            </if>
+            <if test="businesUnit != null">
+                busines_unit = #{businesUnit},
+            </if>
+            <if test="belongs != null">
+                belongs = #{belongs},
+            </if>
+            <if test="conversionRate != null">
+                conversion_rate = #{conversionRate},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="itemType != null">
+                item_type = #{itemType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="checkAcceptId != null">
+                check_accept_id = #{checkAcceptId},
+            </if>
+            <if test="itemPrice != null">
+                item_price = #{itemPrice},
+            </if>
+            <if test="expireTime != null">
+                expire_time = #{expireTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsReceiveNoticeDetailById" parameterType="String">
+        delete
+        from wms_receive_notice_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsReceiveNoticeDetailByIds" parameterType="String">
+        delete
+        from wms_receive_notice_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectReceiveNoticeDetailListByNoticeId" resultMap="WmsReceiveNoticeDetailResult">
+        <include refid="selectWmsReceiveNoticeDetailVo"/>
+        where detail.receive_notice_id = #{noticeId}
+    </select>
+</mapper>

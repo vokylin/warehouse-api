@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.StorageUnitMapper">
+    <resultMap type="StorageUnit" id="StorageUnitResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="thermosphere" column="thermosphere"/>
+        <result property="description" column="description"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="parentIds" column="parent_ids"/>
+        <result property="isSmallestStorageUnit" column="is_smallest_storage_unit"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="storageUnitTypeCode" column="storage_unit_type_code"/>
+        <result property="storageUnitTypeName" column="storage_unit_type_name"/>
+    </resultMap>
+
+    <sql id="selectStorageUnitVo">
+        select id,
+               name,
+               code,
+               warehouse_id,
+               thermosphere,
+               description,
+               parent_id,
+               parent_ids,
+               is_smallest_storage_unit,
+               is_delete,
+               create_user_name,
+               create_by,
+               create_time,
+               update_user_name,
+               update_by,
+               update_time,
+               storage_unit_type_code,
+               storage_unit_type_name
+        from storage_unit
+    </sql>
+
+    <select id="selectStorageUnitList" parameterType="StorageUnit" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        <where>
+            is_delete = 0
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="code != null  and code != ''">
+                and code = #{code}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and parent_id = #{parentId}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="storageUnitTypeCode != null and storageUnitTypeCode != ''">
+                and storage_unit_type_code = #{storageUnitTypeCode}
+            </if>
+            <if test="warehouseIds != null and warehouseIds.size() != 0">
+                and warehouse_id in
+                <foreach collection="warehouseIds" item="warehouseId" open="(" separator="," close=")">
+                    #{warehouseId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectStorageUnitById" parameterType="String" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStorageUnit" parameterType="StorageUnit">
+        insert into storage_unit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="thermosphere != null">
+                thermosphere,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="parentIds != null">
+                parent_ids,
+            </if>
+            <if test="isSmallestStorageUnit != null">
+                is_smallest_storage_unit,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUserName != null">
+                update_user_name,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="storageUnitTypeName != null and storageUnitTypeName != ''">
+                storage_unit_type_name,
+            </if>
+            <if test="storageUnitTypeCode != null and storageUnitTypeCode != ''">
+                storage_unit_type_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="thermosphere != null">
+                #{thermosphere},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="parentIds != null">
+                #{parentIds},
+            </if>
+            <if test="isSmallestStorageUnit != null">
+                #{isSmallestStorageUnit},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateUserName != null">
+                #{updateUserName},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="storageUnitTypeName != null and storageUnitTypeName != ''">
+                #{storageUnitTypeName},
+            </if>
+            <if test="storageUnitTypeCode != null and storageUnitTypeCode != ''">
+                #{storageUnitTypeCode},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStorageUnit" parameterType="StorageUnit">
+        update storage_unit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="thermosphere != null">
+                thermosphere = #{thermosphere},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="parentIds != null">
+                parent_ids = #{parentIds},
+            </if>
+            <if test="isSmallestStorageUnit != null">
+                is_smallest_storage_unit = #{isSmallestStorageUnit},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createUserName != null">
+                create_user_name = #{createUserName},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserName != null">
+                update_user_name = #{updateUserName},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="storageUnitTypeCode != null and storageUnitTypeCode != ''">
+                storage_unit_type_code = #{storageUnitTypeCode},
+            </if>
+            <if test="storageUnitTypeName != null and storageUnitTypeName != ''">
+                storage_unit_type_name = #{storageUnitTypeName},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageUnitById" parameterType="String">
+        update storage_unit
+        set is_delete = 1
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageUnitByIds" parameterType="String">
+        update storage_unit
+        set is_delete = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectStorageUnitListByWarehouseIds" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where warehouse_id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and is_delete = 0
+        and is_smallest_storage_unit = 0
+        order by create_time
+    </select>
+
+    <select id="selectAllStorageUnitByWarehouseIds" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where warehouse_id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and is_delete = 0
+        order by create_time
+    </select>
+
+
+    <select id="selectStorageUnitListByParentIds" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where
+        <foreach item="id" collection="list" open="(" separator="or" close=")">
+            find_in_set(#{id}, parent_ids) and id != #{id}
+        </foreach>
+        and is_delete = 0
+        and is_smallest_storage_unit = 0
+    </select>
+
+    <select id="hasChild" resultType="int">
+        select count(1)
+        from storage_unit
+        where parent_id = #{id}
+          and is_delete = 0
+        limit 1
+    </select>
+
+    <select id="checkNameOrCodeUnique" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where (name = #{name} or code = #{code})
+          and parent_id = #{parentId}
+          and is_delete = 0
+    </select>
+
+    <select id="selectStorageUnitByParentId" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where parent_id = #{parentId}
+          and is_delete = 0
+    </select>
+
+    <select id="selectChildrenStorageUnitById" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where find_in_set(#{id}, parent_ids)
+          and is_delete = 0
+    </select>
+
+    <select id="selectOneChildrenStorageUnitById" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where find_in_set(#{id}, parent_ids)
+          and is_delete = 0
+        limit 1
+    </select>
+
+    <update id="updateStorageUnitChildren">
+        update storage_unit
+        set parent_ids =
+        <foreach collection="children" item="item" index="index"
+                 separator=" " open="case id" close="end">
+            when #{item.id} then #{item.parentIds}
+        </foreach>
+        where id in
+        <foreach collection="children" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <select id="selectAll" resultMap="StorageUnitResult">
+        <include refid="selectStorageUnitVo"/>
+        where is_delete = 0
+        <if test="name != null and name != ''">
+            and name like concat('%', #{name}, '%')
+        </if>
+        <if test="code != null and code != ''">
+            and code like concat('%', #{code}, '%')
+        </if>
+        <if test="warehouseId != null">
+            and warehouse_id = #{warehouseId}
+        </if>
+        <if test="thermosphere != null">
+            and thermosphere = #{thermosphere}
+        </if>
+        <if test="isSmallestStorageUnit != null">
+            and is_smallest_storage_unit = #{isSmallestStorageUnit}
+        </if>
+    </select>
+</mapper>

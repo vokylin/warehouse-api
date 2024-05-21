@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsInventoryDetailMapper">
+    <resultMap type="WmsInventoryDetail" id="WmsInventoryDetailResult">
+        <result property="id" column="id"/>
+        <result property="inventoryId" column="inventory_id"/>
+        <result property="storageDetailId" column="storage_detail_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="locationId" column="location_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="price" column="price"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="inventoryQuantity" column="inventory_quantity"/>
+        <result property="diffQuantity" column="diff_quantity"/>
+        <result property="storageStatus" column="storage_status"/>
+        <result property="productDate" column="product_date"/>
+        <result property="isSave" column="is_save"/>
+        <result property="isAdd" column="is_add"/>
+        <result property="diffAnalysis" column="diff_analysis"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="locationName" column="location_name"/>
+        <result property="warehouseName" column="warehouse_name"/>
+    </resultMap>
+
+    <sql id="selectWmsInventoryDetailVo">
+        select detail.id,
+               detail.inventory_id,
+               detail.warehouse_id,
+               detail.storage_detail_id,
+               detail.location_id,
+               detail.item_code,
+               detail.item_name,
+               detail.unit,
+               detail.spec,
+               detail.price,
+               detail.batch_no,
+               detail.quantity,
+               detail.inventory_quantity,
+               detail.diff_quantity,
+               detail.storage_status,
+               detail.product_date,
+               detail.is_save,
+               detail.is_add,
+               detail.diff_analysis,
+               detail.create_by,
+               detail.create_time,
+               detail.update_by,
+               detail.update_time,
+               storage.name   as location_name,
+               warehouse.name as warehouse_name
+        from wms_inventory_detail as detail
+                 left join storage_unit as storage on detail.location_id = storage.id
+                 left join warehouse on detail.warehouse_id = warehouse.id
+    </sql>
+
+    <select id="selectWmsInventoryDetailList" parameterType="WmsInventoryDetail" resultMap="WmsInventoryDetailResult">
+        <include refid="selectWmsInventoryDetailVo"/>
+        <where>
+            <if test="inventoryId != null  and inventoryId != ''">
+                and detail.inventory_id = #{inventoryId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and detail.warehouse_id = #{warehouseId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and detail.location_id = #{locationId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and detail.item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and detail.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (detail.item_code = #{itemCodeOrName} or detail.item_name like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+        </where>
+        order by detail.is_add, warehouse_id, storage.name, item_code desc
+    </select>
+
+    <select id="selectWmsInventoryDetailById" parameterType="String" resultMap="WmsInventoryDetailResult">
+        <include refid="selectWmsInventoryDetailVo"/>
+        where detail.id = #{id}
+    </select>
+
+    <insert id="insertWmsInventoryDetail" parameterType="WmsInventoryDetail">
+        insert into wms_inventory_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="inventoryId != null">
+                inventory_id,
+            </if>
+            <if test="storageDetailId != null">
+                storage_detail_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="spec != null">
+                spec,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="inventoryQuantity != null">
+                inventory_quantity,
+            </if>
+            <if test="diffQuantity != null">
+                diff_quantity,
+            </if>
+            <if test="storageStatus != null">
+                storage_status,
+            </if>
+            <if test="productDate != null">
+                product_date,
+            </if>
+            <if test="isSave != null">
+                is_save,
+            </if>
+            <if test="isAdd != null">
+                is_add,
+            </if>
+            <if test="diffAnalysis != null">
+                diff_analysis,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="inventoryId != null">
+                #{inventoryId},
+            </if>
+            <if test="storageDetailId != null">
+                #{storageDetailId},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="spec != null">
+                #{spec},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="inventoryQuantity != null">
+                #{inventoryQuantity},
+            </if>
+            <if test="diffQuantity != null">
+                #{diffQuantity},
+            </if>
+            <if test="storageStatus != null">
+                #{storageStatus},
+            </if>
+            <if test="productDate != null">
+                #{productDate},
+            </if>
+            <if test="isSave != null">
+                #{isSave},
+            </if>
+            <if test="isAdd != null">
+                #{isAdd},
+            </if>
+            <if test="diffAnalysis != null">
+                #{diffAnalysis},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsInventoryDetail" parameterType="WmsInventoryDetail">
+        update wms_inventory_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inventoryId != null">
+                inventory_id = #{inventoryId},
+            </if>
+            <if test="storageDetailId != null">
+                storage_detail_id = #{storageDetailId},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="spec != null">
+                spec = #{spec},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="inventoryQuantity != null">
+                inventory_quantity = #{inventoryQuantity},
+            </if>
+            <if test="diffQuantity != null">
+                diff_quantity = #{diffQuantity},
+            </if>
+            <if test="storageStatus != null">
+                storage_status = #{storageStatus},
+            </if>
+            <if test="productDate != null">
+                product_date = #{productDate},
+            </if>
+            <if test="isSave != null">
+                is_save = #{isSave},
+            </if>
+            <if test="isAdd != null">
+                is_add = #{isAdd},
+            </if>
+            <if test="diffAnalysis != null">
+                diff_analysis = #{diffAnalysis},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsInventoryDetailById" parameterType="String">
+        delete
+        from wms_inventory_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsInventoryDetailByIds" parameterType="String">
+        delete
+        from wms_inventory_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectInventoryDetail" resultMap="WmsInventoryDetailResult">
+        <include refid="selectWmsInventoryDetailVo"/>
+        <where>
+            <if test="inventoryId != null  and inventoryId != ''">
+                and detail.inventory_id = #{inventoryId}
+            </if>
+            <if test="batchNo != null and batchNo != ''">
+                and detail.batch_no = #{batchNo}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and detail.warehouse_id = #{warehouseId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and detail.location_id = #{locationId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and detail.item_code = #{itemCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByInventoryPlan" resultMap="WmsInventoryDetailResult">
+        <include refid="selectWmsInventoryDetailVo"/>
+        where detail.inventory_id = #{inventoryId}
+          and detail.is_save = 0
+    </select>
+</mapper>

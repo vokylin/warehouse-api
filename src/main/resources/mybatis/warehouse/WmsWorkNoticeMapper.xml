@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsWorkNoticeMapper">
+    <resultMap type="WmsWorkNotice" id="WmsWorkNoticeResult">
+        <result property="id" column="id"/>
+        <result property="noticeItemDetailId" column="notice_item_detail_id"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="type" column="type"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+        <result property="status" column="status"/>
+        <result property="workStartTime" column="work_start_time"/>
+        <result property="workEndTime" column="work_end_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsWorkNoticeVo">
+        select id,
+               notice_item_detail_id,
+               notice_id,
+               company_id,
+               type,
+               receive_send_type,
+               status,
+               work_start_time,
+               work_end_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_work_notice
+    </sql>
+
+    <select id="selectWmsWorkNoticeList" parameterType="WmsWorkNotice" resultMap="WmsWorkNoticeResult">
+        <include refid="selectWmsWorkNoticeVo"/>
+        <where>
+            <if test="id != null  and id != ''">
+                and INSTR(id, #{id})
+            </if>
+            <if test="noticeId != null  and noticeId != ''">
+                and INSTR(notice_id, #{noticeId})
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                and receive_send_type = #{receiveSendType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="workStartTime != null">
+                and work_start_time = #{workStartTime}
+            </if>
+            <if test="workEndTime != null">
+                and work_end_time = #{workEndTime}
+            </if>
+            <if test="statusArr != null and statusArr.length != 0">
+                and status in
+                <foreach collection="statusArr" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsWorkNoticeById" parameterType="String" resultMap="WmsWorkNoticeResult">
+        <include refid="selectWmsWorkNoticeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsWorkNotice" parameterType="WmsWorkNotice">
+        insert into wms_work_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="noticeItemDetailId != null">
+                notice_item_detail_id,
+            </if>
+            <if test="noticeId != null">
+                notice_id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="workStartTime != null">
+                work_start_time,
+            </if>
+            <if test="workEndTime != null">
+                work_end_time,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="noticeItemDetailId != null">
+                #{noticeItemDetailId},
+            </if>
+            <if test="noticeId != null">
+                #{noticeId},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                #{receiveSendType},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="workStartTime != null">
+                #{workStartTime},
+            </if>
+            <if test="workEndTime != null">
+                #{workEndTime},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsWorkNotice" parameterType="WmsWorkNotice">
+        update wms_work_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="noticeItemDetailId != null">
+                notice_item_detail_id = #{noticeItemDetailId},
+            </if>
+            <if test="noticeId != null">
+                notice_id = #{noticeId},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type = #{receiveSendType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="workStartTime != null">
+                work_start_time = #{workStartTime},
+            </if>
+            <if test="workEndTime != null">
+                work_end_time = #{workEndTime},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsWorkNoticeById" parameterType="String">
+        delete
+        from wms_work_notice
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsWorkNoticeByIds" parameterType="String">
+        delete
+        from wms_work_notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWmsWorkNoticeCountByToday" resultType="int">
+        select count(*)
+        from wms_work_notice
+        where to_days(create_time) = to_days(now())
+          and type = #{workType}
+    </select>
+
+    <select id="selectWmsWorkNoticeByRelateId" resultMap="WmsWorkNoticeResult">
+        <include refid="selectWmsWorkNoticeVo"/>
+        where notice_id = #{noticeId}
+    </select>
+
+    <select id="selectIsCompleteById" resultType="int">
+        select ifnull(sum(IF(wms_work_notice_detail.quantity > wms_work_notice_detail.allot_quantity or
+                             wms_work_notice_allot.status != 1, 1, 0)), 0) as total
+        from wms_work_notice
+                 left join wms_work_notice_detail on wms_work_notice.id = wms_work_notice_detail.work_notice_id
+                 left join wms_work_notice_allot on wms_work_notice.id = wms_work_notice_allot.work_notice_id
+        where wms_work_notice.id = #{id}
+    </select>
+
+    <update id="updatePickWorkNoticeStatus" parameterType="WmsWorkNotice">
+        update wms_work_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where notice_id = #{noticeId}
+    </update>
+</mapper>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.CustomerMapper">
+    <resultMap type="Customer" id="CustomerResult">
+        <result property="id" column="id"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="shortName" column="short_name"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="concatUser" column="concat_user"/>
+        <result property="tel" column="tel"/>
+        <result property="email" column="email"/>
+        <result property="country" column="country"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="zipCode" column="zip_code"/>
+        <result property="remark" column="remark"/>
+        <result property="enterpriseKey" column="enterprise_key"/>
+        <result property="enterpriseCode" column="enterprise_code"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="openAccount" column="open_account"/>
+        <result property="status" column="status"/>
+        <result property="provinceCode" column="province_code"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="region" column="region"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="typeId" column="type_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="customerLevel" column="customer_level"/>
+        <result property="creditPeriod" column="credit_period"/>
+    </resultMap>
+
+    <sql id="selectCustomerVo">
+        select distinct customer.id,
+                        customer.customer_name,
+                        customer.short_name,
+                        customer.customer_code,
+                        customer.concat_user,
+                        customer.tel,
+                        customer.email,
+                        customer.country,
+                        customer.province,
+                        customer.city,
+                        customer.address,
+                        customer.zip_code,
+                        customer.remark,
+                        customer.enterprise_key,
+                        customer.enterprise_code,
+                        customer.update_user_name,
+                        customer.update_time,
+                        customer.is_deleted,
+                        customer.open_account,
+                        customer.status,
+                        customer.province_code,
+                        customer.city_code,
+                        customer.create_user_id,
+                        customer.create_user_name,
+                        customer.create_time,
+                        customer.region,
+                        customer.region_code,
+                        customer.type_id,
+                        customer.type_name,
+                        customer.customer_level,
+                        customer.credit_period
+        from tb_sys_customer as customer
+                 left join tb_relation as relation on customer.id = relation.cust_id
+    </sql>
+
+    <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>
+            customer.is_deleted = 0
+              and relation.verify_status = 2
+            <if test="customerName != null  and customerName != ''">
+                and customer.customer_name like concat('%', #{customerName}, '%')
+            </if>
+            <if test="shortName != null  and shortName != ''">
+                and customer.short_name like concat('%', #{shortName}, '%')
+            </if>
+            <if test="customerCode != null  and customerCode != ''">
+                and customer.customer_code = #{customerCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCustomerById" parameterType="String" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCustomer" parameterType="Customer">
+        insert into tb_sys_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="customerName != null">
+                customer_name,
+            </if>
+            <if test="shortName != null">
+                short_name,
+            </if>
+            <if test="customerCode != null">
+                customer_code,
+            </if>
+            <if test="concatUser != null and concatUser != ''">
+                concat_user,
+            </if>
+            <if test="tel != null and tel != ''">
+                tel,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="country != null">
+                country,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="zipCode != null">
+                zip_code,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="enterpriseKey != null">
+                enterprise_key,
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code,
+            </if>
+            <if test="updateUserName != null">
+                update_user_name,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted,
+            </if>
+            <if test="openAccount != null">
+                open_account,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="provinceCode != null">
+                province_code,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="regionCode != null">
+                region_code,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+            <if test="typeName != null">
+                type_name,
+            </if>
+            <if test="customerLevel != null">
+                customer_level,
+            </if>
+            <if test="creditPeriod != null">
+                credit_period,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="customerName != null">
+                #{customerName},
+            </if>
+            <if test="shortName != null">
+                #{shortName},
+            </if>
+            <if test="customerCode != null">
+                #{customerCode},
+            </if>
+            <if test="concatUser != null and concatUser != ''">
+                #{concatUser},
+            </if>
+            <if test="tel != null and tel != ''">
+                #{tel},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="country != null">
+                #{country},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="zipCode != null">
+                #{zipCode},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="enterpriseKey != null">
+                #{enterpriseKey},
+            </if>
+            <if test="enterpriseCode != null">
+                #{enterpriseCode},
+            </if>
+            <if test="updateUserName != null">
+                #{updateUserName},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                #{isDeleted},
+            </if>
+            <if test="openAccount != null">
+                #{openAccount},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="region != null">
+                #{region},
+            </if>
+            <if test="regionCode != null">
+                #{regionCode},
+            </if>
+            <if test="typeId != null">
+                #{typeId},
+            </if>
+            <if test="typeName != null">
+                #{typeName},
+            </if>
+            <if test="customerLevel != null">
+                #{customerLevel},
+            </if>
+            <if test="creditPeriod != null">
+                #{creditPeriod},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCustomer" parameterType="Customer">
+        update tb_sys_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerName != null">
+                customer_name = #{customerName},
+            </if>
+            <if test="shortName != null">
+                short_name = #{shortName},
+            </if>
+            <if test="customerCode != null">
+                customer_code = #{customerCode},
+            </if>
+            <if test="concatUser != null and concatUser != ''">
+                concat_user = #{concatUser},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="country != null">
+                country = #{country},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="zipCode != null">
+                zip_code = #{zipCode},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="enterpriseKey != null">
+                enterprise_key = #{enterpriseKey},
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code = #{enterpriseCode},
+            </if>
+            <if test="updateUserName != null">
+                update_user_name = #{updateUserName},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted = #{isDeleted},
+            </if>
+            <if test="openAccount != null">
+                open_account = #{openAccount},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createUserName != null">
+                create_user_name = #{createUserName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="region != null">
+                region = #{region},
+            </if>
+            <if test="regionCode != null">
+                region_code = #{regionCode},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="typeName != null">
+                type_name = #{typeName},
+            </if>
+            <if test="customerLevel != null">
+                customer_level = #{customerLevel},
+            </if>
+            <if test="creditPeriod != null">
+                credit_period = #{creditPeriod},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCustomerById" parameterType="String">
+        delete
+        from tb_sys_customer
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomerByIds" parameterType="String">
+        delete
+        from tb_sys_customer where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCode" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where customer_code = #{customerCode}
+        limit 1
+    </select>
+</mapper>

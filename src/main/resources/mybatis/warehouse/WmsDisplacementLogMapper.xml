@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsDisplacementLogMapper">
+    <resultMap type="WmsDisplacementLog" id="WmsDisplacementLogResult">
+        <result property="id" column="id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="originalLocation" column="original_location"/>
+        <result property="originalLocationName" column="original_location_name"/>
+        <result property="targetLocationName" column="target_location_name"/>
+        <result property="targetLocation" column="target_location"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectWmsDisplacementLogVo">
+        select wms_displacement_log.id,
+               wms_displacement_log.warehouse_id,
+                wms_displacement_log.company_id,
+               wms_displacement_log.item_code,
+               wms_displacement_log.item_name,
+               wms_displacement_log.batch_no,
+               wms_displacement_log.quantity,
+               wms_displacement_log.unit,
+               wms_displacement_log.spec,
+               wms_displacement_log.original_location,
+               wms_displacement_log.target_location,
+               wms_displacement_log.create_time,
+               user.nick_name                                                                  as create_user_name,
+               (select name
+                from storage_unit
+                where id = wms_displacement_log.original_location)                             as original_location_name,
+               (select name from storage_unit where id = wms_displacement_log.target_location) as target_location_name,
+               warehouse.name                                                                  as warehouse_name
+        from wms_displacement_log
+                 left join warehouse on wms_displacement_log.warehouse_id = warehouse.id
+                 left join sys_user as user on wms_displacement_log.create_user = user.user_id
+    </sql>
+
+    <select id="selectWmsDisplacementLogList" parameterType="WmsDisplacementLog" resultMap="WmsDisplacementLogResult">
+        <include refid="selectWmsDisplacementLogVo"/>
+        <where>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="itemName != null">
+                and item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and batch_no = #{batchNo}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity}
+            </if>
+            <if test="originalLocation != null  and originalLocation != ''">
+                and original_location = #{originalLocation}
+            </if>
+            <if test="targetLocation != null  and targetLocation != ''">
+                and target_location = #{targetLocation}
+            </if>
+            <if test="createUser != null">
+                and create_user = #{createUser}
+            </if>
+            <!--            如果页面没有筛选仓库, 则按照用户所拥有的仓库进行条件过滤-->
+            <if test="warehouseId == null or warehouseId == ''">
+                <if test="warehouseIdList != null and warehouseIdList.size() != 0">
+                    and warehouse_id in
+                    <foreach collection="warehouseIdList" item="warehouseId" open="(" separator="," close=")">
+                        #{warehouseId}
+                    </foreach>
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsDisplacementLogById" parameterType="String" resultMap="WmsDisplacementLogResult">
+        <include refid="selectWmsDisplacementLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDisplacementLog" parameterType="WmsDisplacementLog">
+        insert into wms_displacement_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="unit != null and unit != ''">
+                unit,
+            </if>
+            <if test="spec != null and spec != ''">
+                spec,
+            </if>
+            <if test="originalLocation != null">
+                original_location,
+            </if>
+            <if test="targetLocation != null">
+                target_location,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="unit != null and unit != ''">
+                #{unit},
+            </if>
+            <if test="spec != null and spec != ''">
+                #{spec},
+            </if>
+            <if test="originalLocation != null">
+                #{originalLocation},
+            </if>
+            <if test="targetLocation != null">
+                #{targetLocation},
+            </if>
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDisplacementLog" parameterType="WmsDisplacementLog">
+        update wms_displacement_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="unit != null and unit != ''">
+                unit = #{unit},
+            </if>
+            <if test="spec != null and spec != ''">
+                spec = #{spec},
+            </if>
+            <if test="originalLocation != null">
+                original_location = #{originalLocation},
+            </if>
+            <if test="targetLocation != null">
+                target_location = #{targetLocation},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDisplacementLogById" parameterType="String">
+        delete
+        from wms_displacement_log
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDisplacementLogByIds" parameterType="String">
+        delete
+        from wms_displacement_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

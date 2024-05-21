@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsExamineConclusionMapper">
+    <resultMap type="WmsExamineConclusion" id="WmsExamineConclusionResult">
+        <result property="id" column="id"/>
+        <result property="examineId" column="examine_id"/>
+        <result property="receiveStatus" column="receive_status"/>
+        <result property="receiveQuantity" column="receive_quantity"/>
+        <result property="refundQuantity" column="refund_quantity"/>
+        <result property="specialNo" column="special_no"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsExamineConclusionVo">
+        select id,
+               examine_id,
+               receive_status,
+               receive_quantity,
+               refund_quantity,
+               special_no,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_examine_conclusion
+    </sql>
+
+    <select id="selectWmsExamineConclusionList" parameterType="WmsExamineConclusion"
+            resultMap="WmsExamineConclusionResult">
+        <include refid="selectWmsExamineConclusionVo"/>
+        <where>
+            <if test="examineId != null  and examineId != ''">
+                and examine_id = #{examineId}
+            </if>
+            <if test="receiveStatus != null">
+                and receive_status = #{receiveStatus}
+            </if>
+            <if test="receiveQuantity != null">
+                and receive_quantity = #{receiveQuantity}
+            </if>
+            <if test="refundQuantity != null">
+                and refund_quantity = #{refundQuantity}
+            </if>
+            <if test="specialNo != null  and specialNo != ''">
+                and special_no = #{specialNo}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsExamineConclusionById" parameterType="String" resultMap="WmsExamineConclusionResult">
+        <include refid="selectWmsExamineConclusionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsExamineConclusion" parameterType="WmsExamineConclusion">
+        insert into wms_examine_conclusion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="examineId != null">
+                examine_id,
+            </if>
+            <if test="receiveStatus != null">
+                receive_status,
+            </if>
+            <if test="receiveQuantity != null">
+                receive_quantity,
+            </if>
+            <if test="refundQuantity != null">
+                refund_quantity,
+            </if>
+            <if test="specialNo != null">
+                special_no,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="examineId != null">
+                #{examineId},
+            </if>
+            <if test="receiveStatus != null">
+                #{receiveStatus},
+            </if>
+            <if test="receiveQuantity != null">
+                #{receiveQuantity},
+            </if>
+            <if test="refundQuantity != null">
+                #{refundQuantity},
+            </if>
+            <if test="specialNo != null">
+                #{specialNo},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsExamineConclusion" parameterType="WmsExamineConclusion">
+        update wms_examine_conclusion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examineId != null">
+                examine_id = #{examineId},
+            </if>
+            <if test="receiveStatus != null">
+                receive_status = #{receiveStatus},
+            </if>
+            <if test="receiveQuantity != null">
+                receive_quantity = #{receiveQuantity},
+            </if>
+            <if test="refundQuantity != null">
+                refund_quantity = #{refundQuantity},
+            </if>
+            <if test="specialNo != null">
+                special_no = #{specialNo},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsExamineConclusionById" parameterType="String">
+        delete
+        from wms_examine_conclusion
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsExamineConclusionByIds" parameterType="String">
+        delete
+        from wms_examine_conclusion where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByExamineId" resultMap="WmsExamineConclusionResult">
+        <include refid="selectWmsExamineConclusionVo"/>
+        where examine_id = #{examineId}
+    </select>
+</mapper>

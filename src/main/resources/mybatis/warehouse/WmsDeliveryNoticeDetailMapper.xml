@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsDeliveryNoticeDetailMapper">
+    <resultMap type="WmsDeliveryNoticeDetail" id="WmsDeliveryNoticeDetailResult">
+        <result property="id" column="id"/>
+        <result property="deliveryNoticeId" column="delivery_notice_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="allotQuantity" column="allot_quantity"/>
+        <result property="workQuantity" column="work_quantity"/>
+        <result property="workFinishQuantity" column="work_finish_quantity"/>
+        <result property="deliveryQuantity" column="delivery_quantity"/>
+        <result property="status" column="status"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemBarcode" column="item_barcode"/>
+        <result property="itemUnit" column="item_unit"/>
+        <result property="itemSpec" column="item_spec"/>
+        <result property="businessQuantity" column="business_quantity"/>
+        <result property="businessUnit" column="business_unit"/>
+        <result property="belongs" column="belongs"/>
+        <result property="conversionRate" column="conversion_rate"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsDeliveryNoticeDetailVo">
+        select id,
+               delivery_notice_id,
+               quantity,
+               allot_quantity,
+               work_quantity,
+               work_finish_quantity,
+               delivery_quantity,
+               status,
+               item_code,
+               item_name,
+               item_barcode,
+               item_unit,
+               item_spec,
+               business_quantity,
+               business_unit,
+               belongs,
+               conversion_rate,
+               business_no,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_delivery_notice_detail
+    </sql>
+
+    <select id="selectWmsDeliveryNoticeDetailList" parameterType="WmsDeliveryNoticeDetail"
+            resultMap="WmsDeliveryNoticeDetailResult">
+        <include refid="selectWmsDeliveryNoticeDetailVo"/>
+        <where>
+            <if test="deliveryNoticeId != null  and deliveryNoticeId != ''">
+                and delivery_notice_id = #{deliveryNoticeId}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity}
+            </if>
+            <if test="allotQuantity != null">
+                and allot_quantity = #{allotQuantity}
+            </if>
+            <if test="workQuantity != null">
+                and work_quantity = #{workQuantity}
+            </if>
+            <if test="workFinishQuantity != null">
+                and work_finish_quantity = #{workFinishQuantity}
+            </if>
+            <if test="deliveryQuantity != null">
+                and delivery_quantity = #{deliveryQuantity}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (item_code like concat('%', #{itemCodeOrName}, '%') or
+                     item_name like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+            <if test="itemBarcode != null  and itemBarcode != ''">
+                and item_barcode = #{itemBarcode}
+            </if>
+            <if test="itemUnit != null  and itemUnit != ''">
+                and item_unit = #{itemUnit}
+            </if>
+            <if test="itemSpec != null  and itemSpec != ''">
+                and item_spec = #{itemSpec}
+            </if>
+            <if test="businessQuantity != null">
+                and business_quantity = #{businessQuantity}
+            </if>
+            <if test="businessUnit != null  and businessUnit != ''">
+                and business_unit = #{businessUnit}
+            </if>
+            <if test="belongs != null  and belongs != ''">
+                and belongs = #{belongs}
+            </if>
+            <if test="conversionRate != null">
+                and conversion_rate = #{conversionRate}
+            </if>
+            <if test="businessNo != null  and businessNo != ''">
+                and business_no = #{businessNo}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsDeliveryNoticeDetailById" parameterType="String" resultMap="WmsDeliveryNoticeDetailResult">
+        <include refid="selectWmsDeliveryNoticeDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDeliveryNoticeDetail" parameterType="WmsDeliveryNoticeDetail">
+        insert into wms_delivery_notice_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="allotQuantity != null">
+                allot_quantity,
+            </if>
+            <if test="workQuantity != null">
+                work_quantity,
+            </if>
+            <if test="workFinishQuantity != null">
+                work_finish_quantity,
+            </if>
+            <if test="deliveryQuantity != null">
+                delivery_quantity,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="itemBarcode != null">
+                item_barcode,
+            </if>
+            <if test="itemUnit != null">
+                item_unit,
+            </if>
+            <if test="itemSpec != null">
+                item_spec,
+            </if>
+            <if test="businessQuantity != null">
+                business_quantity,
+            </if>
+            <if test="businessUnit != null">
+                business_unit,
+            </if>
+            <if test="belongs != null">
+                belongs,
+            </if>
+            <if test="conversionRate != null">
+                conversion_rate,
+            </if>
+            <if test="businessNo != null">
+                business_no,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="deliveryNoticeId != null">
+                #{deliveryNoticeId},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="allotQuantity != null">
+                #{allotQuantity},
+            </if>
+            <if test="workQuantity != null">
+                #{workQuantity},
+            </if>
+            <if test="workFinishQuantity != null">
+                #{workFinishQuantity},
+            </if>
+            <if test="deliveryQuantity != null">
+                #{deliveryQuantity},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="itemBarcode != null">
+                #{itemBarcode},
+            </if>
+            <if test="itemUnit != null">
+                #{itemUnit},
+            </if>
+            <if test="itemSpec != null">
+                #{itemSpec},
+            </if>
+            <if test="businessQuantity != null">
+                #{businessQuantity},
+            </if>
+            <if test="businessUnit != null">
+                #{businessUnit},
+            </if>
+            <if test="belongs != null">
+                #{belongs},
+            </if>
+            <if test="conversionRate != null">
+                #{conversionRate},
+            </if>
+            <if test="businessNo != null">
+                #{businessNo},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDeliveryNoticeDetail" parameterType="WmsDeliveryNoticeDetail">
+        update wms_delivery_notice_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id = #{deliveryNoticeId},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="allotQuantity != null">
+                allot_quantity = #{allotQuantity},
+            </if>
+            <if test="workQuantity != null">
+                work_quantity = #{workQuantity},
+            </if>
+            <if test="workFinishQuantity != null">
+                work_finish_quantity = #{workFinishQuantity},
+            </if>
+            <if test="deliveryQuantity != null">
+                delivery_quantity = #{deliveryQuantity},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="itemBarcode != null">
+                item_barcode = #{itemBarcode},
+            </if>
+            <if test="itemUnit != null">
+                item_unit = #{itemUnit},
+            </if>
+            <if test="itemSpec != null">
+                item_spec = #{itemSpec},
+            </if>
+            <if test="businessQuantity != null">
+                business_quantity = #{businessQuantity},
+            </if>
+            <if test="businessUnit != null">
+                business_unit = #{businessUnit},
+            </if>
+            <if test="belongs != null">
+                belongs = #{belongs},
+            </if>
+            <if test="conversionRate != null">
+                conversion_rate = #{conversionRate},
+            </if>
+            <if test="businessNo != null">
+                business_no = #{businessNo},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDeliveryNoticeDetailById" parameterType="String">
+        delete
+        from wms_delivery_notice_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDeliveryNoticeDetailByIds" parameterType="String">
+        delete
+        from wms_delivery_notice_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByNoticeId" resultMap="WmsDeliveryNoticeDetailResult">
+        <include refid="selectWmsDeliveryNoticeDetailVo"/>
+        where delivery_notice_id = #{deliveryNoticeId}
+    </select>
+
+    <update id="updateByNotice" parameterType="WmsDeliveryNoticeDetail">
+        update wms_delivery_notice_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="allotQuantity != null">
+                allot_quantity = #{allotQuantity},
+            </if>
+            <if test="workQuantity != null">
+                work_quantity = #{workQuantity},
+            </if>
+            <if test="workFinishQuantity != null">
+                work_finish_quantity = #{workFinishQuantity},
+            </if>
+            <if test="deliveryQuantity != null">
+                delivery_quantity = #{deliveryQuantity},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where delivery_notice_id = #{deliveryNoticeId}
+    </update>
+</mapper>

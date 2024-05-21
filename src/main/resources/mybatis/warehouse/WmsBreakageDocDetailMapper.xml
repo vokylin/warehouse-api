@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsBreakageDocDetailMapper">
+    <resultMap type="WmsBreakageDocDetail" id="WmsBreakageDocDetailResult">
+        <result property="id" column="id"/>
+        <result property="breakageDocId" column="breakage_doc_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="totalQuantity" column="total_quantity"/>
+        <result property="unit" column="unit"/>
+        <result property="price" column="price"/>
+        <result property="spec" column="spec"/>
+        <result property="badCauses" column="bad_causes"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="locationId" column="location_id"/>
+        <result property="productDate" column="product_date"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="locationName" column="location_name"/>
+        <result property="warehouseName" column="warehouse_name"/>
+    </resultMap>
+
+    <sql id="selectWmsBreakageDocDetailVo">
+        select detail.id,
+               detail.breakage_doc_id,
+               detail.item_code,
+               detail.item_name,
+               detail.batch_no,
+               detail.quantity,
+               detail.total_quantity,
+               detail.unit,
+               detail.price,
+               detail.spec,
+               detail.bad_causes,
+               detail.warehouse_id,
+               detail.location_id,
+               detail.product_date,
+               detail.expire_date,
+               detail.create_by,
+               detail.create_time,
+               detail.update_by,
+               detail.update_time,
+               storage.name   as location_name,
+               warehouse.name as warehouse_name
+        from wms_breakage_doc_detail as detail
+                 left join storage_unit as storage on detail.location_id = storage.id
+                 left join warehouse as warehouse on detail.warehouse_id = warehouse.id
+    </sql>
+
+    <select id="selectWmsBreakageDocDetailList" parameterType="WmsBreakageDocDetail"
+            resultMap="WmsBreakageDocDetailResult">
+        <include refid="selectWmsBreakageDocDetailVo"/>
+        <where>
+            <if test="breakageDocId != null  and breakageDocId != ''">
+                and detail.breakage_doc_id = #{breakageDocId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and detail.item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and detail.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and detail.batch_no = #{batchNo}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and detail.warehouse_id = #{warehouseId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and detail.location_id = #{locationId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsBreakageDocDetailById" parameterType="String" resultMap="WmsBreakageDocDetailResult">
+        <include refid="selectWmsBreakageDocDetailVo"/>
+        where detail.id = #{id}
+    </select>
+
+    <insert id="insertWmsBreakageDocDetail" parameterType="WmsBreakageDocDetail">
+        insert into wms_breakage_doc_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="breakageDocId != null">
+                breakage_doc_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="totalQuantity != null">
+                total_quantity,
+            </if>
+            <if test="spec != null">
+                spec,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="badCauses != null">
+                bad_causes,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="productDate != null">
+                product_date,
+            </if>
+            <if test="expireDate != null">
+                expire_date,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="breakageDocId != null">
+                #{breakageDocId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="totalQuantity != null">
+                #{totalQuantity},
+            </if>
+            <if test="spec != null">
+                #{spec},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="badCauses != null">
+                #{badCauses},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="productDate != null">
+                #{productDate},
+            </if>
+            <if test="expireDate != null">
+                #{expireDate},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsBreakageDocDetail" parameterType="WmsBreakageDocDetail">
+        update wms_breakage_doc_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="breakageDocId != null">
+                breakage_doc_id = #{breakageDocId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="totalQuantity != null">
+                total_quantity = #{totalQuantity},
+            </if>
+            <if test="spec != null">
+                spec = #{spec},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="badCauses != null">
+                bad_causes = #{badCauses},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="productDate != null">
+                product_date = #{productDate},
+            </if>
+            <if test="expireDate != null">
+                expire_date = #{expireDate},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsBreakageDocDetailById" parameterType="String">
+        delete
+        from wms_breakage_doc_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsBreakageDocDetailByIds" parameterType="String">
+        delete
+        from wms_breakage_doc_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectDetail" resultMap="WmsBreakageDocDetailResult">
+        <include refid="selectWmsBreakageDocDetailVo"/>
+        <where>
+            <if test="breakageDocId != null  and breakageDocId != ''">
+                and detail.breakage_doc_id = #{breakageDocId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and detail.item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and detail.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and detail.batch_no = #{batchNo}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and detail.warehouse_id = #{warehouseId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and detail.location_id = #{locationId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByDocId" resultMap="WmsBreakageDocDetailResult">
+        select id,
+               breakage_doc_id,
+               item_code,
+               item_name,
+               batch_no,
+               quantity,
+               total_quantity,
+               unit,
+               price,
+               spec,
+               bad_causes,
+               warehouse_id,
+               location_id,
+               product_date,
+               expire_date,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_breakage_doc_detail
+        where breakage_doc_id = #{docId}
+    </select>
+
+
+    <select id="generatePrintNumber" parameterType="com.ruoyi.project.warehouse.domain.BreakageDocPrintInfo"
+            resultType="java.lang.Integer">
+        SELECT result.rowNum
+        FROM (SELECT @rowNum := @rowNum + 1 AS rowNum, t.*
+              FROM (SELECT detail.id, doc.occ_time
+                    FROM wms_breakage_doc_detail AS detail
+                             LEFT JOIN wms_breakage_doc AS doc ON detail.breakage_doc_id = doc.id
+                    where doc.status = 2
+                    HAVING doc.occ_time BETWEEN DATE_FORMAT(#{param2}, '%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{param3}, '%Y-%m-%d 23:59:59')
+                    ORDER BY doc.occ_time) AS t,
+                   (SELECT @rowNum := 0) AS r) AS result
+        where result.id = #{param1}
+    </select>
+</mapper>

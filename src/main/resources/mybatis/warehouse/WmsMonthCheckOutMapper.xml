@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsMonthCheckOutMapper">
+    
+    <resultMap type="WmsMonthCheckOut" id="WmsMonthCheckOutResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="yearMonths"    column="year_months"    />
+        <result property="yearStr"    column="year_str"    />
+        <result property="monthStr"    column="month_str"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemSpec"    column="item_spec"    />
+        <result property="itemUnit"    column="item_unit"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="openingQuantity"    column="opening_quantity"    />
+        <result property="openingPrice"    column="opening_price"    />
+        <result property="openingTotal"    column="opening_total"    />
+        <result property="endingQuantity"    column="ending_quantity"    />
+        <result property="endingPrice"    column="ending_price"    />
+        <result property="endingTotal"    column="ending_total"    />
+        <result property="inQuantity"    column="in_quantity"    />
+        <result property="inPrice"    column="in_price"    />
+        <result property="inTotal"    column="in_total"    />
+        <result property="outQuantity"    column="out_quantity"    />
+        <result property="outPrice"    column="out_price"    />
+        <result property="outTotal"    column="out_total"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWmsMonthCheckOutVo">
+        select id, company_id, year_months, year_str, month_str, item_code, item_name, item_spec, item_unit, is_delete, opening_quantity, opening_price, openting_total, ending_quantity, ending_price, ending_total, in_quantity, in_price, in_total, out_quantity, out_price, out_total, create_by, create_time, update_by, update_time from wms_month_check_out
+    </sql>
+
+    <select id="selectWmsMonthCheckOutList" parameterType="WmsMonthCheckOut" resultMap="WmsMonthCheckOutResult">
+        SELECT
+            year_months,
+            item_code,
+            item_name,
+            item_spec,
+            item_unit,
+            IFNULL(opening_quantity, 0) AS opening_quantity,
+            IFNULL(opening_price, 0) AS opening_price,
+            IFNULL(opening_total, 0) AS opening_total,
+            IFNULL(in_quantity, 0) AS in_quantity,
+            IFNULL(out_quantity, 0) AS out_quantity,
+            IFNULL(ending_quantity, 0) AS ending_quantity,
+            IFNULL(ending_price, 0) AS ending_price,
+            IFNULL(ending_total, 0) AS ending_total
+        FROM
+            wms_month_check_out
+        <where>
+            is_delete = 0
+            <if test="companyId != null and companyId != ''">
+                AND company_id = #{companyId}
+            </if>
+            <if test="yearMonths != null and yearMonths != ''">
+                AND year_months = #{yearMonths}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                AND INSTR(item_name, #{itemName})
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                AND INSTR(item_code, #{itemCode})
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findCheckOut" parameterType="WmsMonthCheckOut" resultType="java.lang.Integer">
+        SELECT count(1) FROM wms_month_check_out
+        <where>
+            is_delete = 0
+            <if test="companyId != null and companyId != ''">
+                AND company_id = #{companyId}
+            </if>
+            <if test="yearMonths != null and yearMonths != ''">
+                AND year_months = #{yearMonths}
+            </if>
+        </where>
+    </select>
+
+    <select id="findItemInfo"  resultMap="WmsMonthCheckOutResult">
+        SELECT
+         product_code AS item_code,
+         product_name AS item_name,
+         spec AS item_spec,
+         master_unit AS item_unit
+        FROM tb_product_info
+        where is_deleted = 0
+        AND audit_status = 2
+    </select>
+    
+    <select id="selectWmsMonthCheckOutById" parameterType="String" resultMap="WmsMonthCheckOutResult">
+        <include refid="selectWmsMonthCheckOutVo"/>
+        where id = #{id}
+    </select>
+
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch">
+        insert into wms_month_check_out(
+        id,
+        company_id,
+        year_months,
+        year_str,
+        month_str,
+        item_code,
+        item_name,
+        item_spec,
+        item_unit,
+        is_delete,
+        opening_quantity,
+        opening_price,
+        opening_total,
+        ending_quantity,
+        ending_price,
+        ending_total,
+        in_quantity,
+        in_price,
+        in_total,
+        out_quantity,
+        out_price,
+        out_total,
+        create_by,
+        create_time
+        )
+        values
+        <foreach collection="monthCheckOutList" item="entity" index="index" separator=",">
+            (#{entity.id},
+            #{entity.companyId},
+            #{entity.yearMonths},
+            #{entity.yearStr},
+            #{entity.monthStr},
+            #{entity.itemCode},
+            #{entity.itemName},
+            #{entity.itemSpec},
+            #{entity.itemUnit},
+            #{entity.isDelete},
+            #{entity.openingQuantity},
+            #{entity.openingPrice},
+            #{entity.openingTotal},
+            #{entity.endingQuantity},
+            #{entity.endingPrice},
+            #{entity.endingTotal},
+            #{entity.inQuantity},
+            #{entity.inPrice},
+            #{entity.inTotal},
+            #{entity.outQuantity},
+            #{entity.outPrice},
+            #{entity.outTotal},
+            #{entity.createBy},
+            #{entity.createTime})
+        </foreach>
+    </insert>
+        
+    <insert id="insertWmsMonthCheckOut" parameterType="WmsMonthCheckOut">
+        insert into wms_month_check_out
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="yearMonths != null">year_months,</if>
+            <if test="yearStr != null">year_str,</if>
+            <if test="monthStr != null">month_str,</if>
+            <if test="itemCode != null">item_code,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="itemSpec != null">item_spec,</if>
+            <if test="itemUnit != null">item_unit,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="openingQuantity != null">opening_quantity,</if>
+            <if test="openingPrice != null">opening_price,</if>
+            <if test="openingTotal != null">opening_total,</if>
+            <if test="endingQuantity != null">ending_quantity,</if>
+            <if test="endingPrice != null">ending_price,</if>
+            <if test="endingTotal != null">ending_total,</if>
+            <if test="inQuantity != null">in_quantity,</if>
+            <if test="inPrice != null">in_price,</if>
+            <if test="inTotal != null">in_total,</if>
+            <if test="outQuantity != null">out_quantity,</if>
+            <if test="outPrice != null">out_price,</if>
+            <if test="outTotal != null">out_total,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="yearMonths != null">#{yearMonths},</if>
+            <if test="yearStr != null">#{yearStr},</if>
+            <if test="monthStr != null">#{monthStr},</if>
+            <if test="itemCode != null">#{itemCode},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="itemSpec != null">#{itemSpec},</if>
+            <if test="itemUnit != null">#{itemUnit},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="openingQuantity != null">#{openingQuantity},</if>
+            <if test="openingPrice != null">#{openingPrice},</if>
+            <if test="openingTotal != null">#{openingTotal},</if>
+            <if test="endingQuantity != null">#{endingQuantity},</if>
+            <if test="endingPrice != null">#{endingPrice},</if>
+            <if test="endingTotal != null">#{endingTotal},</if>
+            <if test="inQuantity != null">#{inQuantity},</if>
+            <if test="inPrice != null">#{inPrice},</if>
+            <if test="inTotal != null">#{inTotal},</if>
+            <if test="outQuantity != null">#{outQuantity},</if>
+            <if test="outPrice != null">#{outPrice},</if>
+            <if test="outTotal != null">#{outTotal},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="reverseSettlement" parameterType="WmsMonthCheckOut">
+        update wms_month_check_out
+        set is_delete = 1, update_by = #{updateBy}, update_time = #{updateTime}
+        where company_id = #{companyId} and year_months = #{yearMonths}
+    </update>
+
+    <select id="getLastCheckOutMonth" resultType="java.lang.String">
+        SELECT year_months FROM wms_month_check_out
+        WHERE is_delete = 0
+        GROUP BY year_months
+        ORDER BY year_months DESC
+        LIMIT 1
+    </select>
+
+</mapper>

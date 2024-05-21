@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsBillOfLoadingMapper">
+    <resultMap type="WmsBillOfLoading" id="WmsBillOfLoadingResult">
+        <result property="id" column="id"/>
+        <result property="deliveryNoticeId" column="delivery_notice_id"/>
+        <result property="businessId" column="business_id"/>
+        <result property="businessType" column="business_type"/>
+        <result property="companyId" column="company_id"/>
+        <result property="planQuantity" column="plan_quantity"/>
+        <result property="quantity" column="quantity"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="status" column="status"/>
+        <result property="carriersId" column="carriers_id"/>
+        <result property="carriersConcat" column="carriers_concat"/>
+        <result property="carInfo" column="car_info"/>
+        <result property="logisticsNo" column="logistics_no"/>
+        <result property="fare" column="fare"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="deliveryDate" column="delivery_date"/>
+        <result property="logisticsName" column="logistics_name"/>
+        <result property="logisticsCode" column="logistics_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerCode" column="customer_code"/>
+    </resultMap>
+
+    <sql id="selectWmsBillOfLoadingVo">
+        select bill.id,
+               bill.delivery_notice_id,
+               bill.business_id,
+               bill.business_type,
+               bill.company_id,
+               bill.plan_quantity,
+               bill.quantity,
+               bill.customer_id,
+               bill.status,
+               bill.carriers_id,
+               bill.carriers_concat,
+               bill.car_info,
+               bill.logistics_no,
+               bill.fare,
+               bill.create_by,
+               bill.create_date,
+               bill.update_by,
+               bill.update_date,
+               bill.delivery_date,
+               bill.customer_name,
+               bill.customer_code,
+               logistics.logistics_name,
+               logistics.logistics_code
+        from wms_bill_of_loading as bill
+                 left join tb_logistics as logistics on bill.carriers_id = logistics.id
+    </sql>
+
+    <select id="selectWmsBillOfLoadingList" parameterType="WmsBillOfLoading" resultMap="WmsBillOfLoadingResult">
+        <include refid="selectWmsBillOfLoadingVo"/>
+        <where>
+            <if test="deliveryNoticeId != null  and deliveryNoticeId != ''">
+                bill.delivery_notice_id = #{deliveryNoticeId}
+            </if>
+            <if test="businessId != null  and businessId != ''">
+                and bill.business_id = #{businessId}
+            </if>
+            <if test="businessType != null  and businessType != ''">
+                and bill.business_type = #{businessType}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and bill.company_id = #{companyId}
+            </if>
+            <if test="customerId != null  and customerId != ''">
+                and bill.customer_id = #{customerId}
+            </if>
+            <if test="status != null">
+                and bill.status = #{status}
+            </if>
+            <if test="carriersId != null  and carriersId != ''">
+                and bill.carriers_id = #{carriersId}
+            </if>
+            <if test="startDate != null">
+                and bill.delivery_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                and bill.delivery_date &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsBillOfLoadingById" parameterType="String" resultMap="WmsBillOfLoadingResult">
+        <include refid="selectWmsBillOfLoadingVo"/>
+        where bill.id = #{id}
+    </select>
+
+    <insert id="insertWmsBillOfLoading" parameterType="WmsBillOfLoading">
+        insert into wms_bill_of_loading
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="planQuantity != null">
+                plan_quantity,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="customerId != null">
+                customer_id,
+            </if>
+            <if test="customerCode != null and customerCode != ''">
+                customer_code,
+            </if>
+            <if test="customerName != null and customerName != ''">
+                customer_name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="carriersId != null">
+                carriers_id,
+            </if>
+            <if test="carriersConcat != null">
+                carriers_concat,
+            </if>
+            <if test="carInfo != null">
+                car_info,
+            </if>
+            <if test="logisticsNo != null">
+                logistics_no,
+            </if>
+            <if test="fare != null">
+                fare,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="deliveryDate != null">
+                delivery_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="deliveryNoticeId != null">
+                #{deliveryNoticeId},
+            </if>
+            <if test="businessId != null">
+                #{businessId},
+            </if>
+            <if test="businessType != null">
+                #{businessType},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="planQuantity != null">
+                #{planQuantity},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="customerCode != null and customerCode != ''">
+                #{customerCode},
+            </if>
+            <if test="customerName != null and customerName != ''">
+                #{customerName},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="carriersId != null">
+                #{carriersId},
+            </if>
+            <if test="carriersConcat != null">
+                #{carriersConcat},
+            </if>
+            <if test="carInfo != null">
+                #{carInfo},
+            </if>
+            <if test="logisticsNo != null">
+                #{logisticsNo},
+            </if>
+            <if test="fare != null">
+                #{fare},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="deliveryDate != null">
+                #{deliveryDate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsBillOfLoading" parameterType="WmsBillOfLoading">
+        update wms_bill_of_loading
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id = #{deliveryNoticeId},
+            </if>
+            <if test="businessId != null">
+                business_id = #{businessId},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="planQuantity != null">
+                plan_quantity = #{planQuantity},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="customerId != null">
+                customer_id = #{customerId},
+            </if>
+            <if test="customerCode != null and customerCode != ''">
+                customer_code = #{customerCode},
+            </if>
+            <if test="customerName != null and customerName != ''">
+                customer_name = #{customerName},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="carriersId != null">
+                carriers_id = #{carriersId},
+            </if>
+            <if test="carriersConcat != null">
+                carriers_concat = #{carriersConcat},
+            </if>
+            <if test="carInfo != null">
+                car_info = #{carInfo},
+            </if>
+            <if test="logisticsNo != null">
+                logistics_no = #{logisticsNo},
+            </if>
+            <if test="fare != null">
+                fare = #{fare},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="deliveryDate != null">
+                delivery_date = #{deliveryDate},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsBillOfLoadingById" parameterType="String">
+        delete
+        from wms_bill_of_loading
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsBillOfLoadingByIds" parameterType="String">
+        delete
+        from wms_bill_of_loading where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWmsBillOfLoadingCountByToday" resultType="int">
+        select count(1)
+        from wms_bill_of_loading
+        where to_days(create_date) = to_days(now())
+    </select>
+
+    <select id="selectByNoticeId" resultMap="WmsBillOfLoadingResult">
+        <include refid="selectWmsBillOfLoadingVo"/>
+        where delivery_notice_id = #{deliveryNoticeId}
+        limit 1
+    </select>
+</mapper>

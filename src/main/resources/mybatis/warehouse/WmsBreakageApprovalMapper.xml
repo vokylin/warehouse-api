@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsBreakageApprovalMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.warehouse.domain.WmsBreakageApproval">
+        <result column="id" property="id"/>
+        <result column="breakage_doc_id" property="breakageDocId"/>
+        <result column="dept_supervisor" property="deptSupervisor"/>
+        <result column="quality_supervisor" property="qualitySupervisor"/>
+        <result column="quantity_dept_supervisor" property="quantityDeptSupervisor"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        select id,
+               breakage_doc_id,
+               dept_supervisor,
+               quality_supervisor,
+               quantity_dept_supervisor
+        from wms_breakage_approval
+    </sql>
+    <insert id="insertSelective" parameterType="com.ruoyi.project.warehouse.domain.WmsBreakageApproval">
+        insert into wms_breakage_approval
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="breakageDocId != null">
+                breakage_doc_id,
+            </if>
+            <if test="deptSupervisor != null">
+                dept_supervisor,
+            </if>
+            <if test="qualitySupervisor != null">
+                quality_supervisor,
+            </if>
+            <if test="quantityDeptSupervisor != null">
+                quantity_dept_supervisor,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="breakageDocId != null">
+                #{breakageDocId},
+            </if>
+            <if test="deptSupervisor != null">
+                #{deptSupervisor},
+            </if>
+            <if test="qualitySupervisor != null">
+                #{qualitySupervisor},
+            </if>
+            <if test="quantityDeptSupervisor != null">
+                #{quantityDeptSupervisor},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByBreakageDocId" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        where breakage_doc_id = #{breakageDocId}
+    </select>
+
+</mapper>

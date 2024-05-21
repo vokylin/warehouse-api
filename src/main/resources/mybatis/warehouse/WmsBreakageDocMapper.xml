@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsBreakageDocMapper">
+    <resultMap type="WmsBreakageDoc" id="WmsBreakageDocResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="officeId" column="office_id"/>
+        <result property="officeName" column="office_name"/>
+        <result property="applicant" column="applicant"/>
+        <result property="applicantId" column="applicant_id"/>
+        <result property="type" column="type"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+        <result property="status" column="status"/>
+        <result property="reason" column="reason"/>
+        <result property="description" column="description"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="occTime" column="occ_time"/>
+    </resultMap>
+
+    <sql id="selectWmsBreakageDocVo">
+        select id,
+               company_id,
+               office_id,
+               office_name,
+               applicant,
+                applicant_id,
+               type,
+               receive_send_type,
+               status,
+               reason,
+               description,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               update_time,
+               occ_time
+        from wms_breakage_doc
+    </sql>
+
+    <select id="selectWmsBreakageDocList" parameterType="WmsBreakageDoc" resultMap="WmsBreakageDocResult">
+        <include refid="selectWmsBreakageDocVo"/>
+        <where>
+            <if test="id != null  and id != ''">
+                and id = #{id}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="officeId != null">
+                and office_id = #{officeId}
+            </if>
+            <if test="officeName != null  and officeName != ''">
+                and office_name like concat('%', #{officeName}, '%')
+            </if>
+            <if test="applicant != null  and applicant != ''">
+                and applicant = #{applicant}
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                and receive_send_type = #{receiveSendType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="reason != null  and reason != ''">
+                and reason = #{reason}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsBreakageDocById" parameterType="String" resultMap="WmsBreakageDocResult">
+        <include refid="selectWmsBreakageDocVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsBreakageDoc" parameterType="WmsBreakageDoc">
+        insert into wms_breakage_doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="officeId != null">
+                office_id,
+            </if>
+            <if test="officeName != null">
+                office_name,
+            </if>
+            <if test="applicant != null">
+                applicant,
+            </if>
+            <if test="applicantId != null">
+                applicant_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="receiveSendType != null">
+                receive_send_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="occTime != null">
+                occ_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="officeId != null">
+                #{officeId},
+            </if>
+            <if test="officeName != null">
+                #{officeName},
+            </if>
+            <if test="applicant != null">
+                #{applicant},
+            </if>
+            <if test="applicantId != null">
+                #{applicantId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="receiveSendType != null">
+                #{receiveSendType},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="reason != null">
+                #{reason},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="occTime != null">
+                #{occTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsBreakageDoc" parameterType="WmsBreakageDoc">
+        update wms_breakage_doc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="officeId != null">
+                office_id = #{officeId},
+            </if>
+            <if test="officeName != null">
+                office_name = #{officeName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="receiveSendType != null">
+                receive_send_type = #{receiveSendType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="occTime != null">
+                occ_time = #{occTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsBreakageDocById" parameterType="String">
+        delete
+        from wms_breakage_doc
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsBreakageDocByIds" parameterType="String">
+        delete
+        from wms_breakage_doc where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCountByToday" resultType="int">
+        select count(1)
+        from wms_breakage_doc
+        where to_days(create_time) = to_days(now())
+    </select>
+
+
+    <resultMap type="BreakageDocVO" id="BreakageDocVO">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="officeId" column="office_id"/>
+        <result property="officeName" column="office_name"/>
+        <result property="applicant" column="applicant"/>
+        <result property="type" column="type"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+        <result property="status" column="status"/>
+        <result property="reason" column="reason"/>
+        <result property="description" column="description"/>
+        <result property="occTime" column="occ_time"/>
+        <result property="createBy" column="create_by"/>
+        <collection property="wmsBreakageDocDetailList" ofType="WmsBreakageDocDetail"
+                    column="{docId = id}"
+                    select="com.ruoyi.project.warehouse.mapper.WmsBreakageDocDetailMapper.selectByDocId"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BreakageDocVO">
+        select *
+        from wms_breakage_doc
+        where id = #{id}
+    </select>
+
+
+    <resultMap type="BreakageDocPrintInfo" id="BreakageDocPrintInfo">
+        <result property="id" column="id"/>
+        <result property="detailId" column="detail_id"/>
+        <result property="applicant" column="applicant"/>
+        <result property="description" column="description"/>
+        <result property="reason" column="reason"/>
+        <result property="occTime" column="occ_time"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="badCauses" column="bad_causes"/>
+        <result property="deptSupervisor" column="dept_supervisor"/>
+        <result property="qualitySupervisor" column="quality_supervisor"/>
+        <result property="quantityDeptSupervisor" column="quantity_dept_supervisor"/>
+    </resultMap>
+
+    <select id="getBreakageDocPrintInfo" resultMap="BreakageDocPrintInfo">
+        select doc.id,
+               doc.applicant,
+               doc.description,
+               doc.reason,
+               doc.occ_time,
+               detail.id as detail_id,
+               detail.item_code,
+               detail.item_name,
+               detail.batch_no,
+               detail.quantity,
+               detail.bad_causes,
+               approval.dept_supervisor,
+               approval.quality_supervisor,
+               approval.quantity_dept_supervisor
+        from wms_breakage_doc doc
+                 left join wms_breakage_doc_detail detail on doc.id = detail.breakage_doc_id
+                 left join wms_breakage_approval approval on approval.breakage_doc_id = doc.id
+        where doc.id = #{noticeId}
+    </select>
+</mapper>

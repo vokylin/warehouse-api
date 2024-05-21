@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.RoleWhMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.system.domain.RoleWh">
+        <result column="wh_id" property="whId"/>
+        <result column="role_id" property="roleId"/>
+        <result column="company_id" property="companyId"/>
+    </resultMap>
+
+    <select id="selectListByRoleId" resultType="java.lang.String">
+        select wh_id
+        from role_wh
+        where role_id = #{roleId}
+    </select>
+
+    <insert id="batchWareHouseRole">
+        insert into role_wh (id, wh_id, role_id, company_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.whId}, #{item.roleId}, #{item.companyId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByRoleIds">
+        delete
+        from role_wh
+        where role_id in
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByRoleId">
+        delete
+        from role_wh
+        where role_id = #{roleId}
+    </delete>
+
+    <select id="selectRoleWhByRoleIds" resultMap="BaseResultMap">
+        select *
+        from role_wh
+        where role_id in
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <select id="selectLitByUserId" resultType="java.lang.String">
+        select wh_id
+        from role_wh
+        where role_id in
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
+</mapper>

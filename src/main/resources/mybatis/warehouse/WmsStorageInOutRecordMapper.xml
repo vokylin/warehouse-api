@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsStorageInOutRecordMapper">
+    <resultMap type="WmsStorageInOutRecord" id="WmsStorageInOutRecordResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="type" column="type"/>
+        <result property="beforeRollingPrice" column="before_rolling_price"/>
+        <result property="beforeRollingQuantity" column="before_rolling_quantity"/>
+        <result property="beforeRollingTotalPrice" column="before_rolling_total_price"/>
+        <result property="openingQuantity" column="opening_quantity"/>
+        <result property="openingAmount" column="opening_amount"/>
+        <result property="occPrice" column="occ_price"/>
+        <result property="occQuantity" column="occ_quantity"/>
+        <result property="occTotalPrice" column="occ_total_price"/>
+        <result property="afterRollingPrice" column="after_rolling_price"/>
+        <result property="afterRollingQuantity" column="after_rolling_quantity"/>
+        <result property="afterRollingTotalPrice" column="after_rolling_total_price"/>
+        <result property="surplusQuantity" column="surplus_quantity"/>
+        <result property="surplusAmount" column="surplus_amount"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="occTime" column="occ_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="billType" column="bill_type"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="locationId" column="location_id"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="locationName" column="location_name"/>
+    </resultMap>
+
+    <sql id="selectWmsStorageInOutRecordVo">
+        select wms_storage_in_out_record.id,
+               wms_storage_in_out_record.company_id,
+               wms_storage_in_out_record.item_code,
+               wms_storage_in_out_record.item_name,
+               wms_storage_in_out_record.batch_no,
+               wms_storage_in_out_record.unit,
+               wms_storage_in_out_record.spec,
+               wms_storage_in_out_record.type,
+               wms_storage_in_out_record.before_rolling_price,
+               wms_storage_in_out_record.before_rolling_quantity,
+               wms_storage_in_out_record.before_rolling_total_price,
+               wms_storage_in_out_record.opening_quantity,
+               wms_storage_in_out_record.opening_amount,
+               wms_storage_in_out_record.occ_price,
+               wms_storage_in_out_record.occ_quantity,
+               wms_storage_in_out_record.occ_total_price,
+               wms_storage_in_out_record.after_rolling_price,
+               wms_storage_in_out_record.after_rolling_total_price,
+               wms_storage_in_out_record.after_rolling_quantity,
+               wms_storage_in_out_record.surplus_quantity,
+               wms_storage_in_out_record.surplus_amount,
+               wms_storage_in_out_record.business_no,
+               wms_storage_in_out_record.notice_id,
+               wms_storage_in_out_record.occ_time,
+               wms_storage_in_out_record.create_by,
+               wms_storage_in_out_record.create_time,
+               wms_storage_in_out_record.update_by,
+               wms_storage_in_out_record.update_time,
+               wms_storage_in_out_record.bill_type,
+               wms_storage_in_out_record.receive_send_type,
+               wms_storage_in_out_detail.warehouse_id,
+               wms_storage_in_out_detail.location_id,
+               wms_storage_in_out_detail.warehouse_code,
+               wms_storage_in_out_detail.quantity,
+               warehouse.name    as warehouse_name,
+               storage_unit.name as location_name,
+               IFNULL(delivery.dept_name, receive.dept_name) AS deptName,
+	           IFNULL(delivery.delivery_end_time, receive.end_time) AS completionTime,
+	           IFNULL(delivery.notice_desc, receive.notice_desc) AS noticeDesc,
+	           wms_storage_in_out_detail.remark
+        from wms_storage_in_out_record
+                 LEFT JOIN wms_receive_notice receive
+                            ON wms_storage_in_out_record.notice_id = receive.id
+	             LEFT JOIN wms_delivery_notice delivery
+	                        ON wms_storage_in_out_record.notice_id = delivery.id
+                 right join wms_storage_in_out_detail
+                            on wms_storage_in_out_record.id = wms_storage_in_out_detail.recode_id
+                 left join warehouse
+                           on wms_storage_in_out_detail.warehouse_id = warehouse.id
+                 left join storage_unit
+                           on wms_storage_in_out_detail.location_id = storage_unit.id
+    </sql>
+
+    <select id="selectWmsStorageInOutRecordList" parameterType="WmsStorageInOutRecord"
+            resultMap="WmsStorageInOutRecordResult">
+        <include refid="selectWmsStorageInOutRecordVo"/>
+        <where>
+            <if test="companyId != null  and companyId != ''">
+                wms_storage_in_out_record.company_id = #{companyId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and wms_storage_in_out_record.item_code = #{itemCode}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and wms_storage_in_out_record.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and wms_storage_in_out_record.batch_no = #{batchNo}
+            </if>
+            <if test="type != null">
+                and wms_storage_in_out_record.type = #{type}
+            </if>
+            <if test="businessNo != null  and businessNo != ''">
+                and wms_storage_in_out_record.business_no = #{businessNo}
+            </if>
+            <if test="noticeId != null  and noticeId != ''">
+                and wms_storage_in_out_record.notice_id = #{noticeId}
+            </if>
+            <if test="billType != null">
+                and wms_storage_in_out_record.bill_type = #{billType}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and wms_storage_in_out_detail.warehouse_id = #{warehouseId}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and wms_storage_in_out_record.create_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and wms_storage_in_out_record.create_time &lt;= #{endTime}
+            </if>
+            <!--            如果页面没有筛选仓库, 则按照用户所拥有的仓库进行条件过滤-->
+            <if test="warehouseId == null or warehouseId == ''">
+                <if test="warehouseIdList != null and warehouseIdList.size() != 0">
+                    and wms_storage_in_out_detail.warehouse_id in
+                    <foreach collection="warehouseIdList" item="warehouseId" open="(" separator="," close=")">
+                        #{warehouseId}
+                    </foreach>
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsStorageInOutRecordById" parameterType="String" resultMap="WmsStorageInOutRecordResult">
+        <include refid="selectWmsStorageInOutRecordVo"/>
+        where wms_storage_in_out_record.id = #{id}
+    </select>
+
+    <insert id="insertWmsStorageInOutRecord" parameterType="WmsStorageInOutRecord">
+        insert into wms_storage_in_out_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="spec != null">
+                spec,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="beforeRollingPrice != null">
+                before_rolling_price,
+            </if>
+            <if test="beforeRollingQuantity != null">
+                before_rolling_quantity,
+            </if>
+            <if test="beforeRollingTotalPrice != null">
+                before_rolling_total_price,
+            </if>
+            <if test="openingQuantity != null">
+                opening_quantity,
+            </if>
+            <if test="openingAmount != null">
+                opening_amount,
+            </if>
+            <if test="occPrice != null">
+                occ_price,
+            </if>
+            <if test="occQuantity != null">
+                occ_quantity,
+            </if>
+            <if test="occTotalPrice != null">
+                occ_total_price,
+            </if>
+            <if test="afterRollingPrice != null">
+                after_rolling_price,
+            </if>
+            <if test="afterRollingQuantity != null">
+                after_rolling_quantity,
+            </if>
+            <if test="afterRollingTotalPrice != null">
+                after_rolling_total_price,
+            </if>
+            <if test="surplusQuantity != null">
+                surplus_quantity,
+            </if>
+            <if test="surplusAmount != null">
+                surplus_amount,
+            </if>
+            <if test="businessNo != null">
+                business_no,
+            </if>
+            <if test="noticeId != null">
+                notice_id,
+            </if>
+            <if test="occTime != null">
+                occ_time,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="billType != null">
+                bill_type,
+            </if>
+            <if test="receiveSendType != null">
+                receive_send_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="spec != null">
+                #{spec},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="beforeRollingPrice != null">
+                #{beforeRollingPrice},
+            </if>
+            <if test="beforeRollingQuantity != null">
+                #{beforeRollingQuantity},
+            </if>
+            <if test="beforeRollingTotalPrice != null">
+                #{beforeRollingTotalPrice},
+            </if>
+            <if test="openingQuantity != null">
+                #{openingQuantity},
+            </if>
+            <if test="openingAmount != null">
+                #{openingAmount},
+            </if>
+            <if test="occPrice != null">
+                #{occPrice},
+            </if>
+            <if test="occQuantity != null">
+                #{occQuantity},
+            </if>
+            <if test="occTotalPrice != null">
+                #{occTotalPrice},
+            </if>
+            <if test="afterRollingPrice != null">
+                #{afterRollingPrice},
+            </if>
+            <if test="afterRollingQuantity != null">
+                #{afterRollingQuantity},
+            </if>
+            <if test="afterRollingTotalPrice != null">
+                #{afterRollingTotalPrice},
+            </if>
+            <if test="surplusQuantity != null">
+                #{surplusQuantity},
+            </if>
+            <if test="surplusAmount != null">
+                #{surplusAmount},
+            </if>
+            <if test="businessNo != null">
+                #{businessNo},
+            </if>
+            <if test="noticeId != null">
+                #{noticeId},
+            </if>
+            <if test="occTime != null">
+                #{occTime},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="billType != null">
+                #{billType},
+            </if>
+            <if test="receiveSendType != null">
+                #{receiveSendType},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsStorageInOutRecord" parameterType="WmsStorageInOutRecord">
+        update wms_storage_in_out_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="spec != null">
+                spec = #{spec},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="beforeRollingPrice != null">
+                before_rolling_price = #{beforeRollingPrice},
+            </if>
+            <if test="beforeRollingQuantity != null">
+                before_rolling_quantity = #{beforeRollingQuantity},
+            </if>
+            <if test="occPrice != null">
+                occ_price = #{occPrice},
+            </if>
+            <if test="occQuantity != null">
+                occ_quantity = #{occQuantity},
+            </if>
+            <if test="afterRollingPrice != null">
+                after_rolling_price = #{afterRollingPrice},
+            </if>
+            <if test="businessNo != null">
+                business_no = #{businessNo},
+            </if>
+            <if test="noticeId != null">
+                notice_id = #{noticeId},
+            </if>
+            <if test="occTime != null">
+                occ_time = #{occTime},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="billType != null">
+                bill_type = #{billType},
+            </if>
+            <if test="occTotalPrice != null">
+                occ_total_price = #{occTotalPrice},
+            </if>
+            <if test="afterRollingQuantity != null">
+                after_rolling_quantity = #{afterRollingQuantity},
+            </if>
+            <if test="afterRollingTotalPrice != null">
+                after_rolling_total_price = #{afterRollingTotalPrice},
+            </if>
+            <if test="openingQuantity != null">
+                opening_quantity = #{openingQuantity},
+            </if>
+            <if test="openingAmount != null">
+                opening_amount = #{openingAmount},
+            </if>
+            <if test="surplusQuantity != null">
+                surplus_quantity = #{surplusQuantity},
+            </if>
+            <if test="surplusAmount != null">
+                surplus_amount = #{surplusAmount},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsStorageInOutRecordById" parameterType="String">
+        delete
+        from wms_storage_in_out_record
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsStorageInOutRecordByIds" parameterType="String">
+        delete
+        from wms_storage_in_out_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWmsStorageInOutRecordByItemCode" resultMap="WmsStorageInOutRecordResult">
+        select *
+        from wms_storage_in_out_record
+        where item_code = #{itemCode}
+    </select>
+
+    <select id="selectByBatchNo" resultMap="WmsStorageInOutRecordResult">
+        select *
+        from wms_storage_in_out_record
+        <where>
+            <if test="batchNo != null and batchNo != ''">
+                batch_no = #{batchNo}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="noticeId != null and noticeId != ''">
+                and notice_id = #{noticeId}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBillCode" resultType="java.lang.Integer">
+        SELECT r.rowNum
+        FROM (SELECT @rowNum := @rowNum + 1 AS rowNum,
+                     result.notice_id
+              FROM (SELECT @rowNum := 0) rn,
+                   (SELECT wr.notice_id,
+                           DATE_FORMAT(wr.create_time, '%Y-%m-%d 00:00:00') AS create_time
+                    FROM wms_storage_in_out_record wr
+                             RIGHT JOIN wms_storage_in_out_detail wd ON wr.id = wd.recode_id
+                    WHERE wd.warehouse_code = #{param2}
+                      AND wr.bill_type = #{param3}
+                    GROUP BY wr.notice_id, create_time
+                    HAVING create_time BETWEEN #{param4} AND #{param5}
+                    ORDER BY create_time, notice_id ASC) result) r
+        WHERE r.notice_id = #{param1}
+    </select>
+
+
+    <resultMap type="StorageInOutRecordVO" id="StorageInOutRecordResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="type" column="type"/>
+        <result property="beforeRollingPrice" column="before_rolling_price"/>
+        <result property="beforeRollingQuantity" column="before_rolling_quantity"/>
+        <result property="occPrice" column="occ_price"/>
+        <result property="occQuantity" column="occ_quantity"/>
+        <result property="afterRollingPrice" column="after_rolling_price"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="occTime" column="occ_time"/>
+        <result property="billType" column="bill_type"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="locationId" column="location_id"/>
+    </resultMap>
+
+    <select id="selectStorageRecord" resultMap="StorageInOutRecordResult">
+        select wms_storage_in_out_record.id,
+               wms_storage_in_out_record.company_id,
+               wms_storage_in_out_record.item_code,
+               wms_storage_in_out_record.item_name,
+               wms_storage_in_out_record.batch_no,
+               wms_storage_in_out_record.unit,
+               wms_storage_in_out_record.spec,
+               wms_storage_in_out_record.type,
+               wms_storage_in_out_record.before_rolling_price,
+               wms_storage_in_out_record.before_rolling_quantity,
+               wms_storage_in_out_record.occ_price,
+               wms_storage_in_out_record.occ_quantity,
+               wms_storage_in_out_record.after_rolling_price,
+               wms_storage_in_out_record.business_no,
+               wms_storage_in_out_record.notice_id,
+               wms_storage_in_out_record.occ_time,
+               wms_storage_in_out_record.bill_type,
+               wms_storage_in_out_detail.warehouse_id,
+               wms_storage_in_out_detail.location_id,
+               wms_storage_in_out_detail.warehouse_code,
+               wms_storage_in_out_detail.quantity
+        from wms_storage_in_out_record
+                 right join wms_storage_in_out_detail
+                            on wms_storage_in_out_record.id = wms_storage_in_out_detail.recode_id
+                 left join warehouse
+                           on wms_storage_in_out_detail.warehouse_id = warehouse.id
+                 left join storage_unit
+                           on wms_storage_in_out_detail.location_id = storage_unit.id
+        <where>
+            wms_storage_in_out_record.type = 1
+            <if test="noticeId != null and noticeId != ''">
+                and wms_storage_in_out_record.notice_id = #{noticeId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and wms_storage_in_out_record.item_code = #{itemCode}
+            </if>
+            <if test="batchNo != null and batchNo != ''">
+                and wms_storage_in_out_record.batch_no = #{batchNo}
+            </if>
+        </where>
+    </select>
+</mapper>

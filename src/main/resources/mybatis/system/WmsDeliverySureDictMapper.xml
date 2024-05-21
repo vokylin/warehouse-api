@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WmsDeliverySureDictMapper">
+    <resultMap type="WmsDeliverySureDict" id="WmsDeliverySureDictResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="checkItem" column="check_item"/>
+        <result property="checkRequirement" column="check_requirement"/>
+        <result property="sort" column="sort"/>
+        <result property="thermosphere" column="thermosphere"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsDeliverySureDictVo">
+        select id,
+               company_id,
+               check_requirement,
+               check_item,
+               sort,
+               thermosphere,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_delivery_sure_dict
+    </sql>
+
+    <select id="selectWmsDeliverySureDictList" parameterType="WmsDeliverySureDict"
+            resultMap="WmsDeliverySureDictResult">
+        <include refid="selectWmsDeliverySureDictVo"/>
+        <where>
+            <if test="companyId != null">
+                and company_id = #{companyId}
+            </if>
+            <if test="checkRequirement != null  and checkRequirement != ''">
+                and check_requirement = #{checkRequirement}
+            </if>
+            <if test="checkItem != null  and checkItem != ''">
+                and check_item = #{checkItem}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+            <if test="thermosphere != null  and thermosphere != ''">
+                and thermosphere = #{thermosphere}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsDeliverySureDictById" parameterType="String" resultMap="WmsDeliverySureDictResult">
+        <include refid="selectWmsDeliverySureDictVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDeliverySureDict" parameterType="WmsDeliverySureDict">
+        insert into wms_delivery_sure_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="checkRequirement != null">
+                check_requirement,
+            </if>
+            <if test="checkItem != null">
+                check_item,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="thermosphere != null">
+                thermosphere,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="checkRequirement != null">
+                #{checkRequirement},
+            </if>
+            <if test="checkItem != null">
+                #{checkItem},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="thermosphere != null">
+                #{thermosphere},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDeliverySureDict" parameterType="WmsDeliverySureDict">
+        update wms_delivery_sure_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="checkRequirement != null">
+                check_requirement = #{checkRequirement},
+            </if>
+            <if test="checkItem != null">
+                check_item = #{checkItem},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="thermosphere != null">
+                thermosphere = #{thermosphere},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDeliverySureDictById" parameterType="String">
+        delete
+        from wms_delivery_sure_dict
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDeliverySureDictByIds" parameterType="String">
+        delete
+        from wms_delivery_sure_dict where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

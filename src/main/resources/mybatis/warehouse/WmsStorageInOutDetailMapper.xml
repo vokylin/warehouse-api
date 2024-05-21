@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsStorageInOutDetailMapper">
+    <resultMap type="WmsStorageInOutDetail" id="WmsStorageInOutDetailResult">
+        <result property="id" column="id"/>
+        <result property="recodeId" column="recode_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="locationId" column="location_id"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="quantity" column="quantity"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWmsStorageInOutDetailVo">
+        select id,
+               recode_id,
+               warehouse_id,
+               location_id,
+               warehouse_code,
+               item_code,
+               quantity,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from wms_storage_in_out_detail
+    </sql>
+
+    <select id="selectWmsStorageInOutDetailList" parameterType="WmsStorageInOutDetail"
+            resultMap="WmsStorageInOutDetailResult">
+        <include refid="selectWmsStorageInOutDetailVo"/>
+        <where>
+            <if test="recodeId != null  and recodeId != ''">
+                and recode_id = #{recodeId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and location_id = #{locationId}
+            </if>
+            <if test="warehouseCode != null  and warehouseCode != ''">
+                and warehouse_code = #{warehouseCode}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsStorageInOutDetailById" parameterType="String" resultMap="WmsStorageInOutDetailResult">
+        <include refid="selectWmsStorageInOutDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsStorageInOutDetail" parameterType="WmsStorageInOutDetail">
+        insert into wms_storage_in_out_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="recodeId != null">
+                recode_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="recodeId != null">
+                #{recodeId},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsStorageInOutDetail" parameterType="WmsStorageInOutDetail">
+        update wms_storage_in_out_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recodeId != null">
+                recode_id = #{recodeId},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code = #{warehouseCode},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsStorageInOutDetailById" parameterType="String">
+        delete
+        from wms_storage_in_out_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsStorageInOutDetailByIds" parameterType="String">
+        delete
+        from wms_storage_in_out_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <resultMap type="StorageRecordVo" id="StorageInOutDetailResult">
+        <result property="id" column="id"/>
+        <result property="recodeId" column="recode_id"/>
+        <result property="recordDetailId" column="record_detail_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="companyId" column="company_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="type" column="type"/>
+        <result property="beforeRollingPrice" column="before_rolling_price"/>
+        <result property="beforeRollingQuantity" column="before_rolling_quantity"/>
+        <result property="occPrice" column="occ_price"/>
+        <result property="occQuantity" column="occ_quantity"/>
+        <result property="occTotalPrice" column="occ_total_price"/>
+        <result property="afterRollingPrice" column="after_rolling_price"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="noticeId" column="notice_id"/>
+        <result property="occTime" column="occ_time"/>
+        <result property="billType" column="bill_type"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+    <select id="selectByNoticeId" resultMap="StorageInOutDetailResult">
+        select wms_storage_in_out_detail.warehouse_id as warehouse_id,
+        wms_storage_in_out_detail.warehouse_code as warehouse_code,
+        wms_storage_in_out_detail.id as record_detail_id,
+        wms_storage_in_out_detail.remark as remark,
+        warehouse.name as warehouse_name,
+        wms_storage_in_out_detail.quantity as quantity,
+        wms_storage_in_out_record.company_id as company_id,
+        wms_storage_in_out_record.item_code as item_code,
+        wms_storage_in_out_record.item_name as item_name,
+        wms_storage_in_out_record.batch_no as batch_no,
+        wms_storage_in_out_record.unit as unit,
+        wms_storage_in_out_record.spec as spec,
+        wms_storage_in_out_record.type as type,
+        wms_storage_in_out_record.before_rolling_price as before_rolling_price,
+        wms_storage_in_out_record.before_rolling_quantity as before_rolling_quantity,
+        wms_storage_in_out_record.occ_price as occ_price,
+        wms_storage_in_out_record.occ_quantity as occ_quantity,
+         wms_storage_in_out_record.occ_total_price as occ_total_price,
+        wms_storage_in_out_record.after_rolling_price as after_rolling_price,
+        wms_storage_in_out_record.business_no as business_no,
+        wms_storage_in_out_record.notice_id as notice_id,
+        wms_storage_in_out_record.occ_time as occ_time,
+        wms_storage_in_out_record.create_by as create_by,
+        wms_storage_in_out_record.create_time as create_time,
+        wms_storage_in_out_record.update_by as update_by,
+        wms_storage_in_out_record.update_time as update_time,
+        wms_storage_in_out_record.bill_type as bill_type
+        from wms_storage_in_out_detail
+        left join wms_storage_in_out_record
+        on wms_storage_in_out_record.id = wms_storage_in_out_detail.recode_id
+        left join warehouse on warehouse.id = wms_storage_in_out_detail.warehouse_id
+        where wms_storage_in_out_record.notice_id = #{noticeId}
+        and bill_type = #{billType}
+    </select>
+</mapper>

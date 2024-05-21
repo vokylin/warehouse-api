@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.OriginItemStorageMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.warehouse.domain.OriginItemStorage">
+        <id column="ID" property="id"/>
+        <result column="COMPANY_ID" property="companyId"/>
+        <result column="WAREHOUSE_ID" property="warehouseId"/>
+        <result column="ITEM_ID" property="itemId"/>
+        <result column="LOCATION_ID" property="locationId"/>
+        <result column="CONTAINER_ID" property="containerId"/>
+        <result column="RELATE_ID" property="relateId"/>
+        <result column="RELATE_TYPE" property="relateType"/>
+        <result column="LOT" property="lot"/>
+        <result column="QUANTITY" property="quantity"/>
+        <result column="WORK_STATUS" property="workStatus"/>
+        <result column="STORAGE_STATUS" property="storageStatus"/>
+        <result column="RECEIVE_DATE" property="receiveDate"/>
+        <result column="PRODUCT_DATE" property="productDate"/>
+        <result column="EXPIRE_DATE" property="expireDate"/>
+        <result column="CREATE_BY" property="createBy"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="UPDATE_BY" property="updateBy"/>
+        <result column="UPDATE_DATE" property="updateDate"/>
+        <result column="CACHE_ID" property="cacheId"/>
+        <result column="IS_THROUGH" property="isThrough"/>
+        <result column="INVENTORY_TYPE" property="inventoryType"/>
+        <result column="LOCATION_TYPE" property="locationType"/>
+        <result column="BUSINESS_ID" property="businessId"/>
+        <result column="IS_DOWN_GRADE" property="isDownGrade"/>
+        <result column="DOWN_GRADE_DESC" property="downGradeDesc"/>
+        <result column="DOWN_GRADE_TESTING_ID" property="downGradeTestingId"/>
+        <result column="ITEM_LOT" property="itemLot"/>
+        <result column="item_code" property="itemCode"/>
+        <result column="item_name" property="itemName"/>
+        <result column="unit" property="unit"/>
+        <result column="spec" property="spec"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        select storage.ID,
+               storage.COMPANY_ID,
+               storage.WAREHOUSE_ID,
+               storage.ITEM_ID,
+               storage.LOCATION_ID,
+               storage.CONTAINER_ID,
+               storage.RELATE_ID,
+               storage.RELATE_TYPE,
+               storage.LOT,
+               storage.QUANTITY,
+               storage.WORK_STATUS,
+               storage.STORAGE_STATUS,
+               storage.RECEIVE_DATE,
+               storage.PRODUCT_DATE,
+               storage.EXPIRE_DATE,
+               storage.CREATE_BY,
+               storage.CREATE_DATE,
+               storage.UPDATE_BY,
+               storage.UPDATE_DATE,
+               storage.CACHE_ID,
+               storage.IS_THROUGH,
+               storage.INVENTORY_TYPE,
+               storage.LOCATION_TYPE,
+               storage.BUSINESS_ID,
+               storage.IS_DOWN_GRADE,
+               storage.DOWN_GRADE_DESC,
+               storage.DOWN_GRADE_TESTING_ID,
+               storage.ITEM_LOT,
+               item.CODE as item_code,
+               item.NAME as item_name,
+               item.SPEC       as spec,
+               item.UNIT       as unit
+        from wms_item_storage_origin as storage
+                 left join wms_item as item on storage.ITEM_ID = item.ID
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        where ID = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+    </select>
+</mapper>

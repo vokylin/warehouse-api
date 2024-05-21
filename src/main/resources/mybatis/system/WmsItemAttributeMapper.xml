@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WmsItemAttributeMapper">
+    <resultMap type="WmsItemAttribute" id="WmsItemAttributeResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="upQuality" column="up_quality"/>
+        <result property="downQuality" column="down_quality"/>
+        <result property="remindDay" column="remind_day"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="limitedStatus" column="limited_status"/>
+    </resultMap>
+
+    <sql id="selectWmsItemAttributeVo">
+        select id,
+               company_id,
+               item_code,
+               up_quality,
+               down_quality,
+               remind_day,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               limited_status
+        from wms_item_attribute
+    </sql>
+
+    <select id="selectWmsItemAttributeList" parameterType="WmsItemAttribute" resultMap="WmsItemAttributeResult">
+        <include refid="selectWmsItemAttributeVo"/>
+        <where>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="upQuality != null">
+                and up_quality = #{upQuality}
+            </if>
+            <if test="downQuality != null">
+                and down_quality = #{downQuality}
+            </if>
+            <if test="remindDay != null">
+                and remind_day = #{remindDay}
+            </if>
+            <if test="limitedStatus != null  and limitedStatus != ''">
+                and limited_status = #{limitedStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsItemAttributeById" parameterType="String" resultMap="WmsItemAttributeResult">
+        <include refid="selectWmsItemAttributeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsItemAttribute" parameterType="WmsItemAttribute">
+        insert into wms_item_attribute
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="upQuality != null">
+                up_quality,
+            </if>
+            <if test="downQuality != null">
+                down_quality,
+            </if>
+            <if test="remindDay != null">
+                remind_day,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="limitedStatus != null">
+                limited_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="upQuality != null">
+                #{upQuality},
+            </if>
+            <if test="downQuality != null">
+                #{downQuality},
+            </if>
+            <if test="remindDay != null">
+                #{remindDay},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="limitedStatus != null">
+                #{limitedStatus},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsItemAttribute" parameterType="WmsItemAttribute">
+        update wms_item_attribute
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="upQuality != null">
+                up_quality = #{upQuality},
+            </if>
+            <if test="downQuality != null">
+                down_quality = #{downQuality},
+            </if>
+            <if test="remindDay != null">
+                remind_day = #{remindDay},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="limitedStatus != null">
+                limited_status = #{limitedStatus},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsItemAttributeById" parameterType="String">
+        delete
+        from wms_item_attribute
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsItemAttributeByIds" parameterType="String">
+        delete
+        from wms_item_attribute where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" resultMap="WmsItemAttributeResult">
+        <include refid="selectWmsItemAttributeVo"/>
+    </select>
+
+    <update id="updateLimitedStatus">
+        update wms_item_attribute
+        set limited_status = #{limitedStatus}
+        where item_code = #{itemCode}
+    </update>
+
+    <select id="selectByItemCode" parameterType="String" resultMap="WmsItemAttributeResult">
+        <include refid="selectWmsItemAttributeVo"/>
+        where item_code = #{itemCode}
+    </select>
+</mapper>

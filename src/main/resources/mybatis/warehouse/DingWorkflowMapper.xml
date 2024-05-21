@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.DingWorkflowMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.warehouse.domain.DingWorkflow">
+        <result column="id" property="id"/>
+        <result column="business_id" property="businessId"/>
+        <result column="business_code" property="businessCode"/>
+        <result column="business_name" property="businessName"/>
+        <result column="business_tag" property="businessTag"/>
+        <result column="apply_user_id" property="applyUserId"/>
+        <result column="apply_user_name" property="applyUserName"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="dingding_id" property="dingdingId"/>
+        <result column="dingding_name" property="dingdingName"/>
+        <result column="audit_final_status" property="auditFinalStatus"/>
+        <result column="audit_final_time" property="auditFinalTime"/>
+        <result column="enterprise_key" property="enterpriseKey"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="title" property="title"/>
+        <result column="remark" property="remark"/>
+        <result column="type" property="type"/>
+        <result column="process_code" property="processCode"/>
+        <result column="ding_business_id" property="dingBusinessId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        select id,
+               business_id,
+               business_code,
+               business_name,
+               business_tag,
+               apply_user_id,
+               apply_user_name,
+               apply_time,
+               dingding_id,
+               dingding_name,
+               audit_final_status,
+               audit_final_time,
+               enterprise_key,
+               is_deleted,
+               title,
+               remark,
+               `type`,
+               process_code,
+               ding_business_id
+        from tb_ding_workflow
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectDingWorkflow" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="businessId != null and businessId != ''">
+                and business_id = #{businessId}
+            </if>
+            <if test="processCode != null and processCode != ''">
+                and process_code = #{processCode}
+            </if>
+            <if test="dingdingId != null and dingdingId != ''">
+                and dingding_id = #{dingdingId}
+            </if>
+            <if test="dingBusinessId != null and dingBusinessId != ''">
+                and ding_business_id = #{dingBusinessId}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insertSelective" parameterType="com.ruoyi.project.warehouse.domain.DingWorkflow">
+        insert into tb_ding_workflow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="businessCode != null">
+                business_code,
+            </if>
+            <if test="businessName != null">
+                business_name,
+            </if>
+            <if test="businessTag != null">
+                business_tag,
+            </if>
+            <if test="applyUserId != null">
+                apply_user_id,
+            </if>
+            <if test="applyUserName != null">
+                apply_user_name,
+            </if>
+            <if test="applyTime != null">
+                apply_time,
+            </if>
+            <if test="dingdingId != null">
+                dingding_id,
+            </if>
+            <if test="dingdingName != null">
+                dingding_name,
+            </if>
+            <if test="auditFinalStatus != null">
+                audit_final_status,
+            </if>
+            <if test="auditFinalTime != null">
+                audit_final_time,
+            </if>
+            <if test="enterpriseKey != null">
+                enterprise_key,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="processCode != null">
+                process_code,
+            </if>
+            <if test="dingBusinessId != null">
+                ding_business_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="businessId != null">
+                #{businessId},
+            </if>
+            <if test="businessCode != null">
+                #{businessCode},
+            </if>
+            <if test="businessName != null">
+                #{businessName},
+            </if>
+            <if test="businessTag != null">
+                #{businessTag},
+            </if>
+            <if test="applyUserId != null">
+                #{applyUserId},
+            </if>
+            <if test="applyUserName != null">
+                #{applyUserName},
+            </if>
+            <if test="applyTime != null">
+                #{applyTime},
+            </if>
+            <if test="dingdingId != null">
+                #{dingdingId},
+            </if>
+            <if test="dingdingName != null">
+                #{dingdingName},
+            </if>
+            <if test="auditFinalStatus != null">
+                #{auditFinalStatus},
+            </if>
+            <if test="auditFinalTime != null">
+                #{auditFinalTime},
+            </if>
+            <if test="enterpriseKey != null">
+                #{enterpriseKey},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="processCode != null">
+                #{processCode},
+            </if>
+            <if test="dingBusinessId != null">
+                #{dingBusinessId},
+            </if>
+        </trim>
+    </insert>
+</mapper>

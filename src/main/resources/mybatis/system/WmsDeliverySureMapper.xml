@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WmsDeliverySureMapper">
+    <resultMap type="WmsDeliverySure" id="WmsDeliverySureResult">
+        <result property="id" column="id"/>
+        <result property="deliveryNoticeId" column="delivery_notice_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="result" column="result"/>
+    </resultMap>
+
+    <sql id="selectWmsDeliverySureVo">
+        select id, delivery_notice_id, remark, create_by, create_time, result
+        from wms_delivery_sure
+    </sql>
+
+    <select id="selectWmsDeliverySureList" parameterType="WmsDeliverySure" resultMap="WmsDeliverySureResult">
+        <include refid="selectWmsDeliverySureVo"/>
+        <where>
+            <if test="deliveryNoticeId != null  and deliveryNoticeId != ''">
+                and delivery_notice_id = #{deliveryNoticeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsDeliverySureById" parameterType="String" resultMap="WmsDeliverySureResult">
+        <include refid="selectWmsDeliverySureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsDeliverySure" parameterType="WmsDeliverySure">
+        insert into wms_delivery_sure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="result != null">
+                result,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="deliveryNoticeId != null">
+                #{deliveryNoticeId},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="result != null">
+                #{result},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsDeliverySure" parameterType="WmsDeliverySure">
+        update wms_delivery_sure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deliveryNoticeId != null">
+                delivery_notice_id = #{deliveryNoticeId},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="result != null">
+                result = #{result},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsDeliverySureById" parameterType="String">
+        delete
+        from wms_delivery_sure
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsDeliverySureByIds" parameterType="String">
+        delete
+        from wms_delivery_sure where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <resultMap type="DeliverySureInfo" id="DeliverySureInfo">
+        <result property="id" column="id"/>
+        <result property="deliveryNoticeId" column="delivery_notice_id"/>
+        <result property="remark" column="remark"/>
+        <result property="result" column="result"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUserName" column="create_user_name"/>
+        <collection property="deliverySureDetailList" ofType="WmsDeliverySureDetail" column="{id=id}"
+                    select="com.ruoyi.project.system.mapper.WmsDeliverySureDetailMapper.selectBySureId"/>
+    </resultMap>
+    <select id="selectByNoticeId" resultMap="DeliverySureInfo">
+        select wds.id, wds.delivery_notice_id, wds.remark, wds.result, wds.create_time, su.nick_name as create_user_name
+        from wms_delivery_sure as wds
+        left join sys_user as su on wds.create_by = su.user_id
+        where wds.delivery_notice_id = #{deliveryNoticeId}
+    </select>
+</mapper>

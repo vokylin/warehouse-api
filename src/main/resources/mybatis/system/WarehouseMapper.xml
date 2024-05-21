@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WarehouseMapper">
+    <resultMap type="Warehouse" id="WarehouseResult">
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="belongCompany" column="belong_company"/>
+        <result property="contractUser" column="contract_user"/>
+        <result property="contractPhone" column="contract_phone"/>
+        <result property="email" column="email"/>
+        <result property="type" column="type"/>
+        <result property="remark" column="remark"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="belongCompanyName" column="belong_company_name"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="updateByName" column="update_by_name"/>
+    </resultMap>
+
+    <sql id="selectWarehouseVo">
+        select id,
+               code,
+               name,
+               belong_company,
+               contract_user,
+               contract_phone,
+               email,
+               type,
+               remark,
+               is_delete,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from warehouse
+    </sql>
+
+
+    <sql id="warehouseList">
+        select id,
+               code,
+               name,
+               belong_company,
+               contract_user,
+               contract_phone,
+               email,
+               type,
+               remark,
+               is_delete,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               (select name from company where id = belong_company)       as belong_company_name,
+               (select nick_name from sys_user where user_id = create_by) as create_by_name,
+               (select nick_name from sys_user where user_id = update_by) as update_by_name
+        from warehouse
+    </sql>
+
+
+    <select id="selectWarehouseList" parameterType="Warehouse" resultMap="WarehouseResult">
+        <include refid="warehouseList"/>
+        <where>
+            is_delete = 0
+            <if test="code != null  and code != ''">
+                and code = #{code}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="belongCompany != null  and belongCompany != ''">
+                and belong_company = #{belongCompany}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWarehouseById" parameterType="String" resultMap="WarehouseResult">
+        <include refid="selectWarehouseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWarehouse" parameterType="Warehouse">
+        insert into warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="belongCompany != null">
+                belong_company,
+            </if>
+            <if test="contractUser != null">
+                contract_user,
+            </if>
+            <if test="contractPhone != null">
+                contract_phone,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="belongCompany != null">
+                #{belongCompany},
+            </if>
+            <if test="contractUser != null">
+                #{contractUser},
+            </if>
+            <if test="contractPhone != null">
+                #{contractPhone},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWarehouse" parameterType="Warehouse">
+        update warehouse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="belongCompany != null">
+                belong_company = #{belongCompany},
+            </if>
+            <if test="contractUser != null">
+                contract_user = #{contractUser},
+            </if>
+            <if test="contractPhone != null">
+                contract_phone = #{contractPhone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWarehouseById" parameterType="String">
+        update warehouse
+        set is_delete = 1
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWarehouseByIds" parameterType="String">
+        update warehouse
+        set is_delete = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWarehouseListByCompanyId" resultMap="WarehouseResult">
+        <include refid="warehouseList"/>
+        where belong_company = #{companyId}
+          and is_delete = 0
+    </select>
+
+    <select id="selectWarehouseByIds" resultMap="WarehouseResult">
+        select id, name, belong_company
+        from warehouse
+        where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getWarehouseByCompanyId" resultMap="WarehouseResult">
+        select id, name, belong_company
+        from warehouse
+        where belong_company = #{companyId}
+          and is_delete = 0
+    </select>
+
+    <select id="selectByWarehouseIds" resultMap="WarehouseResult">
+        select id, name, belong_company
+        from warehouse
+        where id in
+        <foreach item="id" collection="warehouseIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

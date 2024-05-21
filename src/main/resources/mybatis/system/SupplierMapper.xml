@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SupplierMapper">
+    <resultMap type="Supplier" id="SupplierResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="enterpriseKey" column="enterprise_key"/>
+        <result property="enterpriseCode" column="enterprise_code"/>
+        <result property="supplierCode" column="supplier_code"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="shortName" column="short_name"/>
+        <result property="contacts" column="contacts"/>
+        <result property="contactsTel" column="contacts_tel"/>
+        <result property="contactsEmail" column="contacts_email"/>
+        <result property="country" column="country"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="zipCode" column="zip_code"/>
+        <result property="description" column="description"/>
+        <result property="createId" column="create_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="wmsSupplierId" column="wms_supplier_id"/>
+        <result property="provinceCode" column="province_code"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="openAccount" column="open_account"/>
+        <result property="region" column="region"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="status" column="status"/>
+        <result property="bigClass" column="big_class"/>
+        <result property="supplierLevel" column="supplier_level"/>
+        <result property="levelClass" column="level_class"/>
+    </resultMap>
+
+    <sql id="selectSupplierVo">
+        select distinct supplier.id,
+                        supplier.company_id,
+                        supplier.enterprise_key,
+                        supplier.enterprise_code,
+                        supplier.supplier_code,
+                        supplier.supplier_name,
+                        supplier.short_name,
+                        supplier.contacts,
+                        supplier.contacts_tel,
+                        supplier.contacts_email,
+                        supplier.country,
+                        supplier.province,
+                        supplier.city,
+                        supplier.address,
+                        supplier.zip_code,
+                        supplier.description,
+                        supplier.create_id,
+                        supplier.create_by,
+                        supplier.create_date,
+                        supplier.update_by,
+                        supplier.update_date,
+                        supplier.is_deleted,
+                        supplier.wms_supplier_id,
+                        supplier.province_code,
+                        supplier.city_code,
+                        supplier.open_account,
+                        supplier.region,
+                        supplier.region_code,
+                        supplier.status,
+                        supplier.big_class,
+                        supplier.supplier_level,
+                        supplier.level_class
+        from tb_sys_supplier as supplier
+                 left join tb_relation as relation on supplier.id = relation.supplier_id
+    </sql>
+
+    <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        <where>
+            supplier.is_deleted = 0
+              and relation.verify_status = 2
+            <if test="companyId != null  and companyId != ''">
+                and supplier.company_id = #{companyId}
+            </if>
+            <if test="enterpriseKey != null  and enterpriseKey != ''">
+                and supplier.enterprise_key = #{enterpriseKey}
+            </if>
+            <if test="enterpriseCode != null  and enterpriseCode != ''">
+                and supplier.enterprise_code = #{enterpriseCode}
+            </if>
+            <if test="supplierCode != null  and supplierCode != ''">
+                and supplier.supplier_code = #{supplierCode}
+            </if>
+            <if test="supplierName != null  and supplierName != ''">
+                and supplier.supplier_name like concat('%', #{supplierName}, '%')
+            </if>
+            <if test="shortName != null  and shortName != ''">
+                and supplier.short_name like concat('%', #{shortName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSupplierById" parameterType="String" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSupplier" parameterType="Supplier">
+        insert into tb_sys_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="enterpriseKey != null">
+                enterprise_key,
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code,
+            </if>
+            <if test="supplierCode != null">
+                supplier_code,
+            </if>
+            <if test="supplierName != null">
+                supplier_name,
+            </if>
+            <if test="shortName != null">
+                short_name,
+            </if>
+            <if test="contacts != null and contacts != ''">
+                contacts,
+            </if>
+            <if test="contactsTel != null and contactsTel != ''">
+                contacts_tel,
+            </if>
+            <if test="contactsEmail != null">
+                contacts_email,
+            </if>
+            <if test="country != null">
+                country,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="zipCode != null">
+                zip_code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted,
+            </if>
+            <if test="wmsSupplierId != null">
+                wms_supplier_id,
+            </if>
+            <if test="provinceCode != null">
+                province_code,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="openAccount != null">
+                open_account,
+            </if>
+            <if test="region != null">
+                region,
+            </if>
+            <if test="regionCode != null">
+                region_code,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="bigClass != null">
+                big_class,
+            </if>
+            <if test="supplierLevel != null">
+                supplier_level,
+            </if>
+            <if test="levelClass != null and levelClass != ''">
+                level_class,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="enterpriseKey != null">
+                #{enterpriseKey},
+            </if>
+            <if test="enterpriseCode != null">
+                #{enterpriseCode},
+            </if>
+            <if test="supplierCode != null">
+                #{supplierCode},
+            </if>
+            <if test="supplierName != null">
+                #{supplierName},
+            </if>
+            <if test="shortName != null">
+                #{shortName},
+            </if>
+            <if test="contacts != null and contacts != ''">
+                #{contacts},
+            </if>
+            <if test="contactsTel != null and contactsTel != ''">
+                #{contactsTel},
+            </if>
+            <if test="contactsEmail != null">
+                #{contactsEmail},
+            </if>
+            <if test="country != null">
+                #{country},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="zipCode != null">
+                #{zipCode},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="createId != null">
+                #{createId},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                #{isDeleted},
+            </if>
+            <if test="wmsSupplierId != null">
+                #{wmsSupplierId},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode},
+            </if>
+            <if test="openAccount != null">
+                #{openAccount},
+            </if>
+            <if test="region != null">
+                #{region},
+            </if>
+            <if test="regionCode != null">
+                #{regionCode},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="bigClass != null">
+                #{bigClass},
+            </if>
+            <if test="supplierLevel != null">
+                #{supplierLevel},
+            </if>
+            <if test="levelClass != null and levelClass != ''">
+                #{levelClass},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSupplier" parameterType="Supplier">
+        update tb_sys_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="enterpriseKey != null">
+                enterprise_key = #{enterpriseKey},
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code = #{enterpriseCode},
+            </if>
+            <if test="supplierCode != null">
+                supplier_code = #{supplierCode},
+            </if>
+            <if test="supplierName != null">
+                supplier_name = #{supplierName},
+            </if>
+            <if test="shortName != null">
+                short_name = #{shortName},
+            </if>
+            <if test="contacts != null and contacts != ''">
+                contacts = #{contacts},
+            </if>
+            <if test="contactsTel != null and contactsTel != ''">
+                contacts_tel = #{contactsTel},
+            </if>
+            <if test="contactsEmail != null">
+                contacts_email = #{contactsEmail},
+            </if>
+            <if test="country != null">
+                country = #{country},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="zipCode != null">
+                zip_code = #{zipCode},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="isDeleted != null and isDeleted != ''">
+                is_deleted = #{isDeleted},
+            </if>
+            <if test="wmsSupplierId != null">
+                wms_supplier_id = #{wmsSupplierId},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode},
+            </if>
+            <if test="openAccount != null">
+                open_account = #{openAccount},
+            </if>
+            <if test="region != null">
+                region = #{region},
+            </if>
+            <if test="regionCode != null">
+                region_code = #{regionCode},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="bigClass != null">
+                big_class = #{bigClass},
+            </if>
+            <if test="supplierLevel != null">
+                supplier_level = #{supplierLevel},
+            </if>
+            <if test="levelClass != null and levelClass != ''">
+                level_class = #{levelClass},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSupplierById" parameterType="String">
+        delete
+        from tb_sys_supplier
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteSupplierByIds" parameterType="String">
+        delete
+        from tb_sys_supplier where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.StorageUnitTypeMapper">
+    <resultMap type="StorageUnitType" id="StorageUnitTypeResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="parentIds" column="parent_ids"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="electronicCodeType" column="electronic_code_type"/>
+    </resultMap>
+
+    <sql id="selectStorageUnitTypeVo">
+        select id,
+               name,
+               code,
+               description,
+               parent_id,
+               parent_ids,
+               is_delete,
+               create_user_name,
+               create_by,
+               create_time,
+               update_user_name,
+               update_by,
+               update_time,
+               electronic_code_type
+        from storage_unit_type
+    </sql>
+
+    <select id="selectStorageUnitTypeList" parameterType="StorageUnitType" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        <where>
+            and is_delete = 0
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="code != null  and code != ''">
+                and code = #{code}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectStorageUnitTypeById" parameterType="String" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStorageUnitType" parameterType="StorageUnitType">
+        insert into storage_unit_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="parentIds != null">
+                parent_ids,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUserName != null">
+                update_user_name,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="electronicCodeType != null">
+                electronic_code_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="parentIds != null">
+                #{parentIds},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateUserName != null">
+                #{updateUserName},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="electronicCodeType != null">
+                #{electronicCodeType},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStorageUnitType" parameterType="StorageUnitType">
+        update storage_unit_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="parentIds != null">
+                parent_ids = #{parentIds},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createUserName != null">
+                create_user_name = #{createUserName},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserName != null">
+                update_user_name = #{updateUserName},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="electronicCodeType != null">
+                electronic_code_type = #{electronicCodeType},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStorageUnitTypeById" parameterType="String">
+        delete
+        from storage_unit_type
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteStorageUnitTypeByIds" parameterType="String">
+        update storage_unit_type
+        set is_delete = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectChildrenStorageUnitTypeById" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        where find_in_set(#{id}, parent_ids)
+          and is_delete = 0
+    </select>
+
+    <update id="updateStorageUnitTypeChildren">
+        update storage_unit_type
+        set parent_ids =
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case id" close="end">
+            when #{item.id} then #{item.parentIds}
+        </foreach>
+        where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <select id="hasChildren" resultType="boolean">
+        select count(1) > 0
+        from storage_unit_type
+        where parent_id = #{id}
+          and is_delete = 0
+    </select>
+
+    <select id="checkStorageUnitTypeNameUnique" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        where name = #{name}
+          and parent_id = #{parentId}
+          and is_delete = 0
+        <if test="id != null and id != ''">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="checkStorageUnitTypeCodeUnique" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        where code = #{code}
+          and is_delete = 0
+        <if test="id != null and id != ''">
+            and id != #{id}
+        </if>
+    </select>
+
+    <select id="findStorageUnitTypeByCode" resultMap="StorageUnitTypeResult">
+        <include refid="selectStorageUnitTypeVo"/>
+        where code = #{code}
+          and is_delete = 0
+    </select>
+</mapper>

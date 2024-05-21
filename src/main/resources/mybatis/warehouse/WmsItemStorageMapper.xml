@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsItemStorageMapper">
+    <resultMap type="WmsItemStorage" id="WmsItemStorageResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="quantity" column="quantity"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="storagePrice" column="storage_price"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="companyName" column="company_name"/>
+        <result property="warehouseName" column="warehouse_name"/>
+    </resultMap>
+
+    <sql id="selectWmsItemStorageVo">
+        select wms_item_storage.id,
+               wms_item_storage.company_id,
+               wms_item_storage.warehouse_id,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.quantity,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price,
+               wms_item_storage.create_by,
+               wms_item_storage.create_time,
+               wms_item_storage.update_by,
+               wms_item_storage.update_time,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               warehouse.name as warehouse_name
+        from wms_item_storage
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+    </sql>
+
+    <resultMap type="WmsItemStorage" id="ItemStorageResultList">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="quantity" column="quantity"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="storagePrice" column="storage_price"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="companyName" column="company_name"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <!--        <result property="relateId" column="relate_id"/>-->
+        <collection property="children" ofType="WmsItemStorageDetail"
+                    column="{storageId = id,relateId = relate_id,workStatus = work_status,storageStatus = storage_status}"
+                    select="com.ruoyi.project.warehouse.mapper.WmsItemStorageDetailMapper.selectWmsItemStorageDetailListByStorageId"/>
+    </resultMap>
+
+    <select id="selectWmsItemStorageList" parameterType="WmsItemStorage" resultMap="ItemStorageResultList">
+        select distinct wms_item_storage.id,
+                        wms_item_storage.company_id,
+                        wms_item_storage.warehouse_id,
+                        wms_item_storage.item_code,
+                        wms_item_storage.item_name,
+                        wms_item_storage.quantity,
+                        wms_item_storage.actual_price,
+                        wms_item_storage.storage_price,
+                        wms_item_storage.create_by,
+                        wms_item_storage.create_time,
+                        wms_item_storage.update_by,
+                        wms_item_storage.update_time,
+                        wms_item_storage.unit,
+                        wms_item_storage.spec,
+                        warehouse.name   as warehouse_name,
+                        #{relateId}      as relate_id,
+                        #{workStatus}    as work_status,
+                        #{storageStatus} as storage_status
+        from wms_item_storage
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+                 left join wms_item_storage_detail as detail on wms_item_storage.id = detail.storage_id
+        <where>
+            <if test="companyId != null  and companyId != ''">
+                wms_item_storage.company_id = #{companyId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and instr(wms_item_storage.item_code, #{itemCode})
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and instr(wms_item_storage.item_name, #{itemName})
+            </if>
+            <if test="quantity != null">
+                and wms_item_storage.quantity = #{quantity}
+            </if>
+            <if test="actualPrice != null">
+                and wms_item_storage.actual_price = #{actualPrice}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and wms_item_storage.company_id = #{companyId}
+            </if>
+            <if test="relateId != null and relateId != ''">
+                and detail.relate_id = #{relateId}
+            </if>
+            <!--            如果页面没有筛选仓库, 则按照用户所拥有的仓库进行条件过滤-->
+            <if test="warehouseId == null or warehouseId == ''">
+                <if test="warehouseIdList != null and warehouseIdList.size() != 0">
+                    and wms_item_storage.warehouse_id in
+                    <foreach collection="warehouseIdList" item="warehouseId" open="(" separator="," close=")">
+                        #{warehouseId}
+                    </foreach>
+                </if>
+            </if>
+            <if test="workStatus != null">
+                and detail.work_status = #{workStatus}
+            </if>
+            <if test="storageStatus != null">
+                and detail.storage_status = #{storageStatus}
+            </if>
+        </where>
+        order by warehouse.name
+    </select>
+
+    <select id="selectWmsItemStorageById" parameterType="String" resultMap="WmsItemStorageResult">
+        <include refid="selectWmsItemStorageVo"/>
+        where wms_item_storage.id = #{id}
+    </select>
+
+    <insert id="insertWmsItemStorage" parameterType="WmsItemStorage">
+        insert into wms_item_storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="spec != null">
+                spec,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="actualPrice != null">
+                actual_price,
+            </if>
+            <if test="storagePrice != null">
+                storage_price,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="spec != null">
+                #{spec},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="actualPrice != null">
+                #{actualPrice},
+            </if>
+            <if test="storagePrice != null">
+                #{storagePrice},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsItemStorage" parameterType="WmsItemStorage">
+        update wms_item_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="spec != null">
+                spec = #{spec},
+            </if>
+            <if test="actualPrice != null">
+                actual_price = #{actualPrice},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateWmsItemStoragePrice" parameterType="WmsItemStorage">
+        update wms_item_storage
+        set actual_price = #{actualPrice}
+        where item_code = #{itemCode}
+          and company_id = #{companyId}
+    </update>
+
+    <update id="updateWmsItemStorageAllPrice" parameterType="WmsItemStorage">
+        update wms_item_storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="actualPrice != null">
+                actual_price = #{actualPrice},
+            </if>
+            <if test="storagePrice != null">
+                storage_price = #{storagePrice},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where item_code = #{itemCode}
+          and company_id = #{companyId}
+    </update>
+
+    <delete id="deleteWmsItemStorageById" parameterType="String">
+        delete
+        from wms_item_storage
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsItemStorageByIds" parameterType="String">
+        delete
+        from wms_item_storage where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectWmsItemStorage" resultMap="WmsItemStorageResult">
+        select *
+        from wms_item_storage
+        <where>
+            <if test="itemCode != null and itemCode != ''">
+                item_code = #{itemCode}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+    <select id="selectWmsItemStorageByCompany" resultMap="WmsItemStorageResult">
+        select *
+        from wms_item_storage
+        where item_code = #{itemCode}
+        <if test="companyId != null and companyId != ''">
+            and company_id = #{companyId}
+        </if>
+    </select>
+
+
+    <select id="getItemStorageBatchNoQuantity" resultType="java.math.BigDecimal">
+        SELECT SUM(detail.quantity)
+        FROM wms_item_storage sto
+                 RIGHT JOIN wms_item_storage_detail detail
+                            ON sto.id = detail.storage_id
+        <where>
+            <if test="itemCode != null and itemCode != ''">
+                sto.item_code = #{itemCode}
+            </if>
+            <if test="batchNo != null and batchNo != ''">
+                and detail.batch_no = #{batchNo}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and sto.company_id = #{companyId}
+            </if>
+        </where>
+        GROUP BY detail.batch_no
+    </select>
+
+
+    <resultMap type="ItemStorageIndexCountVO" id="ItemStorageIndexCountVO">
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="quantity" column="quantity"/>
+        <result property="upQuality" column="up_quality"/>
+        <result property="downQuality" column="down_quality"/>
+        <result property="limitedStatus" column="limited_status"/>
+    </resultMap>
+
+    <select id="selectStorageIndexCount" resultMap="ItemStorageIndexCountVO">
+        select *
+        from (select att.up_quality,
+                     att.down_quality,
+                     case
+                         when att.up_quality &lt; storage.quantity then 1
+                         when att.down_quality &gt; storage.quantity then 2
+                         else 0 end as limited_status,
+                     storage.item_code,
+                     storage.item_name,
+                     storage.unit,
+                     storage.spec,
+                     storage.quantity
+              from wms_item_attribute as att
+                       left join (select sum(quantity) as quantity,
+                                         item_code,
+                                         item_name,
+                                         unit,
+                                         spec
+                                  from wms_item_storage
+                                  group by item_code, item_name, unit, spec) as storage
+                                 on storage.item_code = att.item_code
+              where storage.item_code is not null) as `t`
+        where t.limited_status in (1, 2)
+        <if test="itemCode != null and itemCode != ''">
+            and t.item_code = #{itemCode}
+        </if>
+    </select>
+
+
+    <resultMap type="ExportItemStorage" id="ExportItemStorage">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="totalQuantity" column="total_quantity"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="storagePrice" column="storage_price"/>
+        <result property="companyName" column="company_name"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="locationId" column="location_id"/>
+        <result property="locationName" column="location_name"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="storageStatus" column="storage_status"/>
+        <result property="productDate" column="product_date"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="limitedStatus" column="limited_status"/>
+        <result property="shelfLifeStatus" column="shelf_life_status"/>
+    </resultMap>
+
+    <select id="selectExportList" parameterType="WmsItemStorage" resultMap="ExportItemStorage">
+        select wms_item_storage.id,
+               wms_item_storage.company_id,
+               wms_item_storage.warehouse_id,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.quantity         as total_quantity,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               company.name                      as company_name,
+               warehouse.name                    as warehouse_name,
+               detail.batch_no,
+               detail.quantity                   as quantity,
+               detail.work_status,
+               detail.storage_status,
+               detail.product_date,
+               detail.expire_date,
+               detail.location_id,
+               detail.shelf_life_status,
+               storage_unit.name                 as location_name,
+               wms_item_attribute.limited_status as limited_status
+        from wms_item_storage_detail as detail
+                 left join wms_item_storage on detail.storage_id = wms_item_storage.id
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+                 left join company on wms_item_storage.company_id = company.id
+                 left join storage_unit on detail.location_id = storage_unit.id
+                 left join wms_item_attribute on wms_item_storage.item_code = wms_item_attribute.item_code
+        <where>
+            <if test="companyId != null  and companyId != ''">
+                wms_item_storage.company_id = #{companyId}
+            </if>
+            <if test="warehouseId != null  and warehouseId != ''">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and instr(wms_item_storage.item_code, #{itemCode})
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and instr(wms_item_storage.item_name, #{itemName})
+            </if>
+            <if test="quantity != null">
+                and wms_item_storage.quantity = #{quantity}
+            </if>
+            <if test="actualPrice != null">
+                and wms_item_storage.actual_price = #{actualPrice}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and wms_item_storage.company_id = #{companyId}
+            </if>
+            <if test="relateId != null and relateId != ''">
+                and detail.relate_id = #{relateId}
+            </if>
+            <!--            如果页面没有筛选仓库, 则按照用户所拥有的仓库进行条件过滤-->
+            <if test="warehouseId == null or warehouseId == ''">
+                <if test="warehouseIdList != null and warehouseIdList.size() != 0">
+                    and wms_item_storage.warehouse_id in
+                    <foreach collection="warehouseIdList" item="warehouseId" open="(" separator="," close=")">
+                        #{warehouseId}
+                    </foreach>
+                </if>
+            </if>
+            <if test="workStatus != null">
+                and detail.work_status = #{workStatus}
+            </if>
+            <if test="storageStatus != null">
+                and detail.storage_status = #{storageStatus}
+            </if>
+        </where>
+        order by warehouse.name
+    </select>
+</mapper>

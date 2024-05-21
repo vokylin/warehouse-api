@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsReceiveNoticeMapper">
+    <resultMap type="WmsReceiveNotice" id="WmsReceiveNoticeResult">
+        <result property="id" column="id"/>
+        <result property="businessId" column="business_id"/>
+        <result property="businessType" column="business_type"/>
+        <result property="noticeDesc" column="notice_desc"/>
+        <result property="companyId" column="company_id"/>
+        <result property="status" column="status"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="noticeUser" column="notice_user"/>
+        <result property="noticeTime" column="notice_time"/>
+        <result property="fromName" column="from_name"/>
+        <result property="fromCode" column="from_code"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="receiveSendType" column="receive_send_type"/>
+        <result property="taskId" column="task_id"/>
+        <result property="billType" column="bill_type"/>
+        <result property="scrapSpecialFlag" column="scrap_special_flag"/>
+    </resultMap>
+
+    <sql id="selectWmsReceiveNoticeVo">
+        select id,
+               business_id,
+               business_type,
+               notice_desc,
+               company_id,
+               status,
+               start_time,
+               end_time,
+               notice_user,
+               notice_time,
+               from_code,
+               from_name,
+               dept_name,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               task_id,
+               scrap_special_flag,
+               receive_send_type,
+               (select  wms_storage_in_out_record.bill_type from wms_storage_in_out_record where wms_storage_in_out_record.notice_id = wms_receive_notice.id limit 1) as bill_type
+        from wms_receive_notice
+    </sql>
+
+    <select id="selectWmsReceiveNoticeList" parameterType="WmsReceiveNotice" resultMap="WmsReceiveNoticeResult">
+        <include refid="selectWmsReceiveNoticeVo"/>
+        <where>
+            <if test="id != null  and id != ''">
+                and INSTR(id, #{id})
+            </if>
+            <if test="businessId != null  and businessId != ''">
+                and INSTR(business_id, #{businessId})
+            </if>
+            <if test="businessType != null  and businessType != ''">
+                and business_type = #{businessType}
+            </if>
+            <if test="companyId != null  and companyId != ''">
+                and company_id = #{companyId}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                and receive_send_type = #{receiveSendType}
+            </if>
+            <if test="fromName != null  and fromName != ''">
+                and INSTR(from_name,  #{fromName})
+            </if>
+            <if test="statusArr != null and statusArr.length != 0">
+                and status in
+                <foreach collection="statusArr" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by end_time desc, create_time desc
+    </select>
+
+    <select id="selectWmsReceiveNoticeById" parameterType="String" resultMap="WmsReceiveNoticeResult">
+        select id,
+        business_id,
+        business_type,
+        notice_desc,
+        company_id,
+        status,
+        start_time,
+        end_time,
+        notice_user,
+        notice_time,
+        from_code,
+        from_name,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        dept_name,
+        task_id,
+        scrap_special_flag,
+        receive_send_type
+        from wms_receive_notice
+        where id = #{id}
+    </select>
+
+    <insert id="insertWmsReceiveNotice" parameterType="WmsReceiveNotice">
+        insert into wms_receive_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+            <if test="noticeDesc != null">
+                notice_desc,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="noticeUser != null">
+                notice_user,
+            </if>
+            <if test="noticeTime != null">
+                notice_time,
+            </if>
+            <if test="fromName != null">
+                from_name,
+            </if>
+            <if test="fromCode != null">
+                from_code,
+            </if>
+            <if test="deptName != null">
+                dept_name,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type,
+            </if>
+            <if test="taskId != null">
+                task_id,
+            </if>
+            <if test="scrapSpecialFlag != null">
+                scrap_special_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="businessId != null">
+                #{businessId},
+            </if>
+            <if test="businessType != null">
+                #{businessType},
+            </if>
+            <if test="noticeDesc != null">
+                #{noticeDesc},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="noticeUser != null">
+                #{noticeUser},
+            </if>
+            <if test="noticeTime != null">
+                #{noticeTime},
+            </if>
+            <if test="fromName != null">
+                #{fromName},
+            </if>
+            <if test="fromCode != null">
+                #{fromCode},
+            </if>
+            <if test="deptName != null">
+                #{deptName},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                #{receiveSendType},
+            </if>
+            <if test="taskId != null">
+                #{taskId},
+            </if>
+            <if test="scrapSpecialFlag != null">
+                #{scrapSpecialFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsReceiveNotice" parameterType="WmsReceiveNotice">
+        update wms_receive_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="businessId != null">
+                business_id = #{businessId},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType},
+            </if>
+            <if test="noticeDesc != null">
+                notice_desc = #{noticeDesc},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="noticeUser != null">
+                notice_user = #{noticeUser},
+            </if>
+            <if test="noticeTime != null">
+                notice_time = #{noticeTime},
+            </if>
+            <if test="fromName != null">
+                from_name = #{fromName},
+            </if>
+            <if test="fromCode != null">
+                from_code = #{fromCode},
+            </if>
+            <if test="deptName != null">
+                dept_name = #{deptName},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="receiveSendType != null  and receiveSendType != ''">
+                receive_send_type = #{receiveSendType},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsReceiveNoticeById" parameterType="String">
+        delete
+        from wms_receive_notice
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsReceiveNoticeByIds" parameterType="String">
+        delete
+        from wms_receive_notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectWmsReceiveNoticeCountByToday" resultType="int">
+        select count(1)
+        from wms_receive_notice
+        where to_days(create_time) = to_days(now())
+    </select>
+
+    <select id="selectUnfinishedReceiveNotice" resultType="int">
+        select count(1)
+        from wms_receive_notice
+        where notice_time &gt;= #{startTime} and notice_time &lt;= #{endTime}
+        and status != ${@com.ruoyi.common.enums.ReceiveNoticeStatus@COMPLETE.getCode()}
+        and status != ${@com.ruoyi.common.enums.ReceiveNoticeStatus@CANCEL.getCode()}
+    </select>
+
+</mapper>

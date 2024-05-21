@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.warehouse.mapper.WmsItemStorageDetailMapper">
+    <resultMap type="WmsItemStorageDetail" id="WmsItemStorageDetailResult">
+        <result property="id" column="id"/>
+        <result property="storageId" column="storage_id"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="locationId" column="location_id"/>
+        <result property="locationName" column="location_name"/>
+        <result property="storageStatus" column="storage_status"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="productDate" column="product_date"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="thermosphere" column="thermosphere"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="relateType" column="relate_type"/>
+        <result property="relateId" column="relate_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="storagePrice" column="storage_price"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="shelfLifeStatus" column="shelf_life_status"/>
+        <result property="limitedStatus" column="limited_status"/>
+    </resultMap>
+
+    <sql id="selectWmsItemStorageDetailVo">
+        select wms_item_storage_detail.id,
+               wms_item_storage_detail.storage_id,
+               wms_item_storage_detail.batch_no,
+               wms_item_storage_detail.quantity,
+               wms_item_storage_detail.location_id,
+               wms_item_storage_detail.storage_status,
+               wms_item_storage_detail.work_status,
+               wms_item_storage_detail.product_date,
+               wms_item_storage_detail.expire_date,
+               wms_item_storage_detail.thermosphere,
+               wms_item_storage_detail.create_by,
+               wms_item_storage_detail.create_time,
+               wms_item_storage_detail.update_by,
+               wms_item_storage_detail.update_time,
+               wms_item_storage_detail.relate_type,
+               wms_item_storage_detail.relate_id,
+               wms_item_storage_detail.shelf_life_status,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price,
+               wms_item_storage.warehouse_id     as warehouse_id,
+               storage_unit.name                 as location_name,
+               warehouse.name                    as warehouse_name,
+               wms_item_attribute.limited_status as limited_status
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+                 left join storage_unit on wms_item_storage_detail.location_id = storage_unit.id
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+                 left join wms_item_attribute on wms_item_storage.item_code = wms_item_attribute.item_code
+    </sql>
+
+
+    <select id="selectWmsItemStorageDetailList" parameterType="WmsItemStorageDetail"
+            resultMap="WmsItemStorageDetailResult">
+        <include refid="selectWmsItemStorageDetailVo"/>
+        <where>
+            <if test="storageId != null  and storageId != ''">
+                and wms_item_storage_detail.storage_id = #{storageId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and wms_item_storage_detail.location_id = #{locationId}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="storageStatus != null">
+                and wms_item_storage_detail.storage_status = #{storageStatus}
+            </if>
+            <if test="storageStatusList != null and storageStatusList.size() != 0">
+                and wms_item_storage_detail.storage_status in
+                <foreach item="storageStatus" collection="storageStatusList" open="(" separator="," close=")">
+                    #{storageStatus}
+                </foreach>
+            </if>
+            <if test="workStatus != null">
+                and wms_item_storage_detail.work_status = #{workStatus}
+            </if>
+            <if test="thermosphere != null">
+                and wms_item_storage_detail.thermosphere = #{thermosphere}
+            </if>
+            <if test="relateType != null">
+                and wms_item_storage_detail.relate_type = #{relateType}
+            </if>
+            <if test="relateId != null  and relateId != ''">
+                and wms_item_storage_detail.relate_id = #{relateId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and wms_item_storage.item_code = #{itemCode}
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (wms_item_storage.item_code like concat('%', #{itemCodeOrName}, '%') or wms_item_storage.item_name
+                    like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsItemStorageDetailById" parameterType="String" resultMap="WmsItemStorageDetailResult">
+        <include refid="selectWmsItemStorageDetailVo"/>
+        where wms_item_storage_detail.id = #{id}
+    </select>
+
+    <insert id="insertWmsItemStorageDetail" parameterType="WmsItemStorageDetail">
+        insert into wms_item_storage_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="storageId != null">
+                storage_id,
+            </if>
+            <if test="batchNo != null">
+                batch_no,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="storageStatus != null">
+                storage_status,
+            </if>
+            <if test="workStatus != null">
+                work_status,
+            </if>
+            <if test="productDate != null">
+                product_date,
+            </if>
+            <if test="expireDate != null">
+                expire_date,
+            </if>
+            <if test="thermosphere != null">
+                thermosphere,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="relateType != null">
+                relate_type,
+            </if>
+            <if test="relateId != null">
+                relate_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="storageId != null">
+                #{storageId},
+            </if>
+            <if test="batchNo != null">
+                #{batchNo},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="locationId != null">
+                #{locationId},
+            </if>
+            <if test="storageStatus != null">
+                #{storageStatus},
+            </if>
+            <if test="workStatus != null">
+                #{workStatus},
+            </if>
+            <if test="productDate != null">
+                #{productDate},
+            </if>
+            <if test="expireDate != null">
+                #{expireDate},
+            </if>
+            <if test="thermosphere != null">
+                #{thermosphere},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="relateType != null">
+                #{relateType},
+            </if>
+            <if test="relateId != null">
+                #{relateId},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWmsItemStorageDetail" parameterType="WmsItemStorageDetail">
+        update wms_item_storage_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storageId != null">
+                storage_id = #{storageId},
+            </if>
+            <if test="batchNo != null">
+                batch_no = #{batchNo},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="locationId != null">
+                location_id = #{locationId},
+            </if>
+            <if test="storageStatus != null">
+                storage_status = #{storageStatus},
+            </if>
+            <if test="workStatus != null">
+                work_status = #{workStatus},
+            </if>
+            <if test="productDate != null">
+                product_date = #{productDate},
+            </if>
+            <if test="expireDate != null">
+                expire_date = #{expireDate},
+            </if>
+            <if test="thermosphere != null">
+                thermosphere = #{thermosphere},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="relateType != null">
+                relate_type = #{relateType},
+            </if>
+            <if test="relateId != null">
+                relate_id = #{relateId},
+            </if>
+            <if test="shelfLifeStatus != null">
+                shelf_life_status = #{shelfLifeStatus},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWmsItemStorageDetailById" parameterType="String">
+        delete
+        from wms_item_storage_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWmsItemStorageDetailByIds" parameterType="String">
+        delete
+        from wms_item_storage_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWmsItemStorageDetailListByStorageId" resultMap="WmsItemStorageDetailResult">
+        select wms_item_storage_detail.id,
+               wms_item_storage_detail.storage_id,
+               wms_item_storage_detail.batch_no,
+               wms_item_storage_detail.quantity,
+               wms_item_storage_detail.location_id,
+               wms_item_storage_detail.storage_status,
+               wms_item_storage_detail.work_status,
+               wms_item_storage_detail.product_date,
+               wms_item_storage_detail.expire_date,
+               wms_item_storage_detail.thermosphere,
+               wms_item_storage_detail.create_by,
+               wms_item_storage_detail.create_time,
+               wms_item_storage_detail.update_by,
+               wms_item_storage_detail.update_time,
+               wms_item_storage_detail.relate_type,
+               wms_item_storage_detail.relate_id,
+               wms_item_storage_detail.shelf_life_status,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.warehouse_id,
+               storage_unit.name                 as location_name,
+               wms_item_attribute.limited_status as limited_status
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+                 left join storage_unit on wms_item_storage_detail.location_id = storage_unit.id
+                 left join wms_item_attribute on wms_item_storage.item_code = wms_item_attribute.item_code
+        where wms_item_storage_detail.storage_id = #{storageId}
+        <if test="relateId != null and relateId != ''">
+            and wms_item_storage_detail.relate_id = #{relateId}
+        </if>
+        <if test="workStatus != null">
+            and wms_item_storage_detail.work_status = #{workStatus}
+        </if>
+        <if test="storageStatus != null">
+            and wms_item_storage_detail.storage_status = #{storageStatus}
+        </if>
+        order by wms_item_storage.item_code
+    </select>
+
+    <select id="selectWmsItemStorageDetailListByUser" resultMap="WmsItemStorageDetailResult">
+        <include refid="selectWmsItemStorageDetailVo"/>
+        <where>
+            <if test="warehouseId != null and warehouseIdList != null and warehouseIdList.size() != 0">
+                wms_item_storage.warehouse_id in
+                <foreach item="warehouseId" collection="warehouseIdList" open="(" separator="," close=")">
+                    #{warehouseId}
+                </foreach>
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="storageId != null  and storageId != ''">
+                and wms_item_storage_detail.storage_id = #{storageId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and wms_item_storage_detail.location_id = #{locationId}
+            </if>
+            <if test="storageStatus != null">
+                and wms_item_storage_detail.storage_status = #{storageStatus}
+            </if>
+            <if test="storageStatusList != null and storageStatusList.size() != 0">
+                and wms_item_storage_detail.storage_status in
+                <foreach item="storageStatus" collection="storageStatusList" open="(" separator="," close=")">
+                    #{storageStatus}
+                </foreach>
+            </if>
+            <if test="workStatus != null">
+                and wms_item_storage_detail.work_status = #{workStatus}
+            </if>
+            <if test="thermosphere != null">
+                and wms_item_storage_detail.thermosphere = #{thermosphere}
+            </if>
+            <if test="relateType != null">
+                and wms_item_storage_detail.relate_type = #{relateType}
+            </if>
+            <if test="relateId != null  and relateId != ''">
+                and wms_item_storage_detail.relate_id = #{relateId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and wms_item_storage.item_code = #{itemCode}
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (wms_item_storage.item_code like concat('%', #{itemCodeOrName}, '%')
+                    or wms_item_storage.item_name like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWmsItemStorageDetailByBatchNo" resultMap="WmsItemStorageDetailResult">
+        select detail.id,
+               detail.storage_id,
+               detail.batch_no,
+               detail.quantity,
+               detail.location_id,
+               detail.storage_status,
+               detail.work_status,
+               detail.product_date,
+               detail.expire_date,
+               detail.thermosphere,
+               detail.create_by,
+               detail.create_time,
+               detail.update_by,
+               detail.update_time,
+               detail.relate_type,
+               detail.relate_id,
+               detail.shelf_life_status,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price
+        from wms_item_storage_detail as detail
+                 left join wms_item_storage on detail.storage_id = wms_item_storage.id
+        <where>
+            <if test="batchNo != null and batchNo != ''">
+                detail.batch_no = #{batchNo}
+            </if>
+            <if test="workStatus != null">
+                and detail.work_status = #{workStatus}
+            </if>
+            <if test="storageStatus != null">
+                and detail.storage_status = #{storageStatus}
+            </if>
+            <if test="storageId != null">
+                and detail.storage_id = #{storageId}
+            </if>
+            <if test="locationId != null">
+                and detail.location_id = #{locationId}
+            </if>
+            <if test="warehouseId != null">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="relateType != null">
+                and detail.relate_type = #{relateType}
+            </if>
+            <if test="relateId != null">
+                and detail.relate_id = #{relateId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and wms_item_storage.item_code = #{itemCode}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+    <select id="selectByDeliveryNoticeId" resultMap="WmsItemStorageDetailResult">
+        select wms_item_storage_detail.*,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               wms_item_storage.warehouse_id as warehouse_id
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+        where relate_id = #{relateId}
+          and work_status = #{workStatus}
+          and relate_type = #{relateType}
+        order by wms_item_storage.item_code, wms_item_storage_detail.batch_no ASC
+    </select>
+
+    <select id="shelfLifeCheck" resultMap="WmsItemStorageDetailResult">
+        select detail.id                                                               as id,
+               attribute.remind_day                                                    as remind_day,
+               case
+                   when DATEDIFF(expire_date, now()) &lt;= attribute.remind_day then 1
+                   when DATEDIFF(expire_date, now()) > attribute.remind_day then 2 end as shelf_life_status
+        from wms_item_storage_detail as detail
+                 left join wms_item_storage as storage
+                           on detail.storage_id = storage.id
+                 left join wms_item_attribute as attribute on storage.item_code = attribute.item_code
+        where expire_date IS NOT NULL
+    </select>
+
+    <resultMap type="StorageAlertVO" id="StorageAlertVO">
+        <result property="batchNo" column="batch_no"/>
+        <result property="quantity" column="quantity"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="spec" column="spec"/>
+        <result property="shelfLifeStatus" column="shelf_life_status"/>
+        <result property="produceDate" column="produce_date"/>
+        <result property="remindDay" column="remind_day"/>
+        <result property="diffDay" column="diff_day"/>
+    </resultMap>
+
+
+    <select id="selectAdventItem" resultMap="WmsItemStorageDetailResult">
+        select detail.id as id
+        from wms_item_storage_detail as detail
+                 left join wms_item_storage as storage
+                           on detail.storage_id = storage.id
+                 left join wms_item_attribute as attribute on storage.item_code = attribute.item_code
+        where detail.expire_date is not null
+          and detail.shelf_life_status != 1
+          and detail.expire_date <![CDATA[ > ]]> curdate()
+          and attribute.remind_day is not null
+          and DATEDIFF(detail.expire_date, curdate()) <![CDATA[ <= ]]> attribute.remind_day
+    </select>
+
+    <update id="updateTheExpiredItemStatus">
+        update wms_item_storage_detail
+        set shelf_life_status = 2
+        where expire_date is not null
+          and expire_date <![CDATA[ <= ]]> curdate()
+    </update>
+
+    <update id="updateAdventStatus" parameterType="list">
+        update wms_item_storage_detail
+        set shelf_life_status = 1
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <update id="updateItemStorageByRelateId">
+        update wms_item_storage_detail
+        set relate_id = #{newRelateId}
+        where relate_id = #{oldRelateId}
+    </update>
+
+    <select id="selectStorageAlertList" resultMap="StorageAlertVO">
+        select storage.item_code               as item_code,
+               storage.item_name               as item_name,
+               storage.unit                    as unit,
+               storage.spec                    as spec,
+               sum(detail.quantity)            as quantity,
+               detail.batch_no                 as batch_no,
+               detail.product_date             as produce_date,
+               detail.expire_date              as expire_date,
+               detail.shelf_life_status        as shelf_life_status,
+               ifnull(attribute.remind_day, 0) as remind_day
+        from wms_item_storage_detail as detail
+                 left join wms_item_storage as storage
+                           on detail.storage_id = storage.id
+                 left join wms_item_attribute as attribute on storage.item_code = attribute.item_code
+        where detail.expire_date is not null
+          and detail.shelf_life_status in (1, 2)
+        group by storage.item_code, storage.item_name, storage.unit, storage.spec, detail.batch_no, detail.product_date,
+                 detail.expire_date, detail.shelf_life_status, attribute.remind_day
+    </select>
+
+    <select id="checkStorageStatus" resultMap="WmsItemStorageDetailResult">
+        select warehouse.name as warehouse_name
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+        where wms_item_storage_detail.storage_status in
+        <foreach collection="storageStatusList" item="storageStatus" open="(" separator="," close=")">
+            #{storageStatus}
+        </foreach>
+        and wms_item_storage.warehouse_id in
+        <foreach collection="warehouseList" item="warehouseId" open="(" separator="," close=")">
+            #{warehouseId}
+        </foreach>
+        and wms_item_storage_detail.work_status = 1
+        group by warehouse.name
+    </select>
+
+    <select id="selectByInventoryPlan" resultMap="WmsItemStorageDetailResult">
+        select wms_item_storage_detail.id,
+               wms_item_storage_detail.storage_id,
+               wms_item_storage_detail.batch_no,
+               wms_item_storage_detail.quantity,
+               wms_item_storage_detail.location_id,
+               wms_item_storage_detail.storage_status,
+               wms_item_storage_detail.work_status,
+               wms_item_storage_detail.product_date,
+               wms_item_storage_detail.expire_date,
+               wms_item_storage_detail.thermosphere,
+               wms_item_storage_detail.create_by,
+               wms_item_storage_detail.create_time,
+               wms_item_storage_detail.update_by,
+               wms_item_storage_detail.update_time,
+               wms_item_storage_detail.relate_type,
+               wms_item_storage_detail.relate_id,
+               wms_item_storage_detail.shelf_life_status,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price,
+               wms_item_storage.warehouse_id     as warehouse_id,
+               storage_unit.name                 as location_name,
+               warehouse.name                    as warehouse_name,
+               wms_item_attribute.limited_status as limited_status
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+                 left join storage_unit on wms_item_storage_detail.location_id = storage_unit.id
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+                 left join wms_item_attribute on wms_item_storage.item_code = wms_item_attribute.item_code
+        where wms_item_storage_detail.storage_status in
+        <foreach collection="storageStatusList" item="storageStatus" open="(" separator="," close=")">
+            #{storageStatus}
+        </foreach>
+        and wms_item_storage.warehouse_id in
+        <foreach collection="warehouseList" item="warehouseId" open="(" separator="," close=")">
+            #{warehouseId}
+        </foreach>
+        and wms_item_storage_detail.work_status != 1
+    </select>
+
+    <update id="updateRelateType" parameterType="WmsItemStorageDetail">
+        update wms_item_storage_detail
+        set relate_type = 0,
+            relate_id   = '',
+            work_status = 0
+        where relate_id = #{relateId}
+    </update>
+
+    <select id="selectBreakageList" resultMap="WmsItemStorageDetailResult">
+        select wms_item_storage_detail.id,
+               wms_item_storage_detail.storage_id,
+               wms_item_storage_detail.batch_no,
+               wms_item_storage_detail.quantity,
+               wms_item_storage_detail.location_id,
+               wms_item_storage_detail.storage_status,
+               wms_item_storage_detail.work_status,
+               wms_item_storage_detail.product_date,
+               wms_item_storage_detail.expire_date,
+               wms_item_storage_detail.thermosphere,
+               wms_item_storage_detail.create_by,
+               wms_item_storage_detail.create_time,
+               wms_item_storage_detail.update_by,
+               wms_item_storage_detail.update_time,
+               wms_item_storage_detail.relate_type,
+               wms_item_storage_detail.relate_id,
+               wms_item_storage_detail.shelf_life_status,
+               wms_item_storage.item_code,
+               wms_item_storage.item_name,
+               wms_item_storage.unit,
+               wms_item_storage.spec,
+               wms_item_storage.actual_price,
+               wms_item_storage.storage_price,
+               wms_item_storage.warehouse_id as warehouse_id,
+               storage_unit.name             as location_name,
+               warehouse.name                as warehouse_name
+        from wms_item_storage_detail
+                 left join wms_item_storage on wms_item_storage_detail.storage_id = wms_item_storage.id
+                 left join storage_unit on wms_item_storage_detail.location_id = storage_unit.id
+                 left join warehouse on wms_item_storage.warehouse_id = warehouse.id
+                 left join tb_product_info product
+                           on product.product_code = wms_item_storage.item_code
+        <where>
+            <if test="warehouseId == null or warehouseId == ''">
+                <if test="warehouseIdList != null and warehouseIdList.size() != 0">
+                wms_item_storage.warehouse_id in
+                <foreach item="warehouseId" collection="warehouseIdList" open="(" separator="," close=")">
+                    #{warehouseId}
+                </foreach>
+                </if>
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                and wms_item_storage.warehouse_id = #{warehouseId}
+            </if>
+            <if test="storageId != null  and storageId != ''">
+                and wms_item_storage_detail.storage_id = #{storageId}
+            </if>
+            <if test="locationId != null  and locationId != ''">
+                and wms_item_storage_detail.location_id = #{locationId}
+            </if>
+            <if test="storageStatus != null">
+                and wms_item_storage_detail.storage_status = #{storageStatus}
+            </if>
+            <if test="storageStatusList != null and storageStatusList.size() != 0">
+                and wms_item_storage_detail.storage_status in
+                <foreach item="storageStatus" collection="storageStatusList" open="(" separator="," close=")">
+                    #{storageStatus}
+                </foreach>
+            </if>
+            <if test="workStatus != null">
+                and wms_item_storage_detail.work_status = #{workStatus}
+            </if>
+            <if test="thermosphere != null">
+                and wms_item_storage_detail.thermosphere = #{thermosphere}
+            </if>
+            <if test="relateType != null">
+                and wms_item_storage_detail.relate_type = #{relateType}
+            </if>
+            <if test="relateId != null  and relateId != ''">
+                and wms_item_storage_detail.relate_id = #{relateId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                and wms_item_storage.item_code = #{itemCode}
+            </if>
+            <if test="itemCodeOrName != null and itemCodeOrName != ''">
+                and (wms_item_storage.item_code like concat('%', #{itemCodeOrName}, '%')
+                    or wms_item_storage.item_name like concat('%', #{itemCodeOrName}, '%'))
+            </if>
+            <if test="itemType != null and itemType != ''">
+                <if test="itemType == '1'.toString()">
+                    and product.big_class is not null
+                </if>
+                <if test="itemType == '2'.toString()">
+                    and product.big_class is null
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateAbnormalItem">
+        update wms_item_storage_detail
+        set work_status = 0
+        where relate_id = #{relateId}
+        and work_status = 2
+    </update>
+</mapper>
